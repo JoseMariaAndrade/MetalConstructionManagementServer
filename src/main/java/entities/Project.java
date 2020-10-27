@@ -9,6 +9,9 @@ import java.util.List;
 
 @Entity
 @Table(name = "PROJECTS")
+@NamedQueries({
+        @NamedQuery(name = "getAllProjects", query = "SELECT p FROM Project p ORDER BY p.name") //JPQL
+})
 public class Project implements Serializable {
 
     /*@Id

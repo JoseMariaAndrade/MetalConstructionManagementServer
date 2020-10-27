@@ -12,6 +12,7 @@ import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.validation.ConstraintViolationException;
+import java.util.List;
 
 @Stateless
 public class ProjectBean {
@@ -46,7 +47,23 @@ public class ProjectBean {
 
     }
 
-    private Project findProject(String name) {
+    public List<Project> getAll(){
+        return entityManager.createNamedQuery("getAllProjects").getResultList();
+    }
+
+    public Project findProject(String name) {
         return entityManager.find(Project.class, name);
+    }
+
+    public void delete(String name)
+            throws MyEntityNotFoundException {
+
+        Project project = findProject(name);
+
+        if (project == null) {
+            throw new MyEntityNotFoundException("ERROR");
+        }
+
+        entityManager.remove(project);
     }
 }
