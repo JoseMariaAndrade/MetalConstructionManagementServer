@@ -22,9 +22,9 @@ public class ConfigBean {
 
     @PostConstruct
     void populateDB(){
-        clientBean.create("Jose","jose@mail.pt");
-        designerBean.create("Joao", "joao@mail.pt");
-        try {
+
+        try {clientBean.create("Jose","jose@mail.pt");
+            designerBean.create("Joao", "joao@mail.pt");
             projectBean.create("JoseProjeto", "Jose", "Joao");
         } catch (Exception exception){
             LOGGER.log(Level.SEVERE, exception.getMessage());

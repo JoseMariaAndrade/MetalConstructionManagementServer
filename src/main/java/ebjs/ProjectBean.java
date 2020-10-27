@@ -41,6 +41,7 @@ public class ProjectBean {
 
         try {
             project = new Project(name, client, designer);
+            designer.getProjects().add(project);
             entityManager.persist(project);
         } catch (ConstraintViolationException constraintViolationException){
             throw new MyConstraintViolationException(constraintViolationException);
