@@ -10,6 +10,7 @@ import exceptions.MyIllegalArgumentException;
 
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
+import javax.persistence.LockModeType;
 import javax.persistence.PersistenceContext;
 import javax.validation.ConstraintViolationException;
 import java.util.List;
@@ -65,5 +66,33 @@ public class ProjectBean {
         }
 
         entityManager.remove(project);
+    }
+
+    public void update(String name, String clientName, String designerName)
+            throws MyEntityNotFoundException, MyConstraintViolationException {
+
+        Project project = entityManager.find(Project.class, name);
+
+        if (project == null)
+            throw new MyEntityNotFoundException("ERROR");
+
+        Client client = entityManager.find(Client.class, clientName);
+
+        if (client == null)
+            throw new MyEntityNotFoundException("");
+
+        Designer designer = entityManager.find(Designer.class, designerName);
+
+        if (designer == null)
+            throw new MyEntityNotFoundException("");
+
+        try {
+            entityManager.lock(project, LockModeType.OPTIMISTIC);
+            project.setName(name);
+            project.setClient(client);
+            project.setDesigner(designer);
+        } catch (ConstraintViolationException constraintViolationException) {
+            throw new MyConstraintViolationException(constraintViolationException);
+        }
     }
 }

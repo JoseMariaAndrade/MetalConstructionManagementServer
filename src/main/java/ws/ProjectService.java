@@ -69,6 +69,19 @@ public class ProjectService {
         return Response.status(Response.Status.CREATED).build();
     }
 
+    @PUT
+    public Response update(ProjectDTO projectDTO)
+            throws MyEntityNotFoundException, MyConstraintViolationException {
+
+        projectBean.update(
+                projectDTO.getName(),
+                projectDTO.getClient(),
+                projectDTO.getDesigner()
+        );
+
+        return Response.status(Response.Status.CREATED).build();
+    }
+
     @DELETE
     @Path("{name}")
     public Response delete(@PathParam("name") String name)
