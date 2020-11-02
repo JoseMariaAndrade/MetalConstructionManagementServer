@@ -1,13 +1,18 @@
 package dtos;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class ClientDTO {
 
     private String name;
     private String email;
     private String contact;
     private String address;
+    private List<ProjectDTO> projects;
 
     public ClientDTO() {
+        this.projects = new ArrayList<>();
     }
 
     public ClientDTO(String name, String email, String contact, String address) {
@@ -15,6 +20,7 @@ public class ClientDTO {
         this.email = email;
         this.contact = contact;
         this.address = address;
+        this.projects = new ArrayList<>();
     }
 
     public String getName() {
@@ -47,5 +53,13 @@ public class ClientDTO {
 
     public void setAddress(String address) {
         this.address = address;
+    }
+
+    public List<ProjectDTO> getProjects() {
+        return projects;
+    }
+
+    public void setProjects(List<ProjectDTO> projects) {
+        this.projects = projects;
     }
 }

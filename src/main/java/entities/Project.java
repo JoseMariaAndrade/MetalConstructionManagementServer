@@ -2,7 +2,6 @@ package entities;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
-import java.io.File;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -29,13 +28,14 @@ public class Project implements Serializable {
     @NotNull
     private Designer designer;
     //public List<File> files;
-    //public List<Structure> structures;
-    /*@Version
-    private int version;*/
+    @OneToMany(mappedBy = "project")
+    public List<Structure> structures;
+    @Version
+    private int version;
 
     public Project() {
 //        this.files = new ArrayList<>();
-//        this.structures = new ArrayList<>();
+        this.structures = new ArrayList<>();
     }
 
     public Project(String name, Client client, Designer designer) {
@@ -93,4 +93,13 @@ public class Project implements Serializable {
 //    public void setStructures(List<Structure> structures) {
 //        this.structures = structures;
 //    }
+
+
+    public int getVersion() {
+        return version;
+    }
+
+    public void setVersion(int version) {
+        this.version = version;
+    }
 }

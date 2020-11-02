@@ -1,8 +1,10 @@
 package ws;
 
 import dtos.ClientDTO;
+import dtos.ProjectDTO;
 import ebjs.ClientBean;
 import entities.Client;
+import entities.Project;
 import exceptions.MyConstraintViolationException;
 import exceptions.MyEntityExistsException;
 import exceptions.MyEntityNotFoundException;
@@ -22,7 +24,20 @@ public class ClientService {
     @EJB
     ClientBean clientBean;
 
-    private ClientDTO toDTO(Client client){
+    private ClientDTO toDTONoProjects(Client client) {
+        return new ClientDTO(
+                client.getName(),
+                client.getEmaill(),
+                client.getContact(),
+                client.getMorada()
+        );
+    }
+
+    private List<ClientDTO> toDTOs(List<Client> clients) {
+        return clients.stream().map(this::toDTONoProjects).collect(Collectors.toList());
+    }
+
+    private ClientDTO toDTO(Client client) {
         ClientDTO clientDTO = new ClientDTO(
                 client.getName(),
                 client.getEmaill(),
@@ -30,11 +45,22 @@ public class ClientService {
                 client.getMorada()
         );
 
+        List<ProjectDTO> projectDTOS = projectsToDTOs(client.getProjects());
+        clientDTO.setProjects(projectDTOS);
+
         return clientDTO;
     }
 
-    private List<ClientDTO> toDTOs(List<Client> clients){
-        return clients.stream().map(this::toDTO).collect(Collectors.toList());
+    private List<ProjectDTO> projectsToDTOs(List<Project> projects) {
+        return projects.stream().map(this::toDTO).collect(Collectors.toList());
+    }
+
+    private ProjectDTO toDTO(Project project) {
+        return new ProjectDTO(
+                project.getName(),
+                project.getClient().getName(),
+                project.getDesigner().getName()
+        );
     }
 
     @GET

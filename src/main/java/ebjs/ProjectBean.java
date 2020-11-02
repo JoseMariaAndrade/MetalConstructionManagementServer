@@ -31,16 +31,17 @@ public class ProjectBean {
 
         Client client = entityManager.find(Client.class, nameClient);
         if (client == null){
-            throw new MyEntityNotFoundException(String.format("",nameClient));
+            throw new MyEntityNotFoundException(String.format("%s", nameClient));
         }
 
         Designer designer = entityManager.find(Designer.class, nameDesigner);
         if (designer == null){
-            throw new MyEntityNotFoundException(String.format("", nameDesigner));
+            throw new MyEntityNotFoundException(String.format("%s", nameDesigner));
         }
 
         try {
             project = new Project(name, client, designer);
+            client.getProjects().add(project);
             designer.getProjects().add(project);
             entityManager.persist(project);
         } catch (ConstraintViolationException constraintViolationException){

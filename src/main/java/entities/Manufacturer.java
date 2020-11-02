@@ -7,6 +7,8 @@ import javax.validation.constraints.NotNull;
 @Entity
 public class Manufacturer extends User {
 
+    //private List<Product> products;
+
     public Manufacturer() {
         super();
     }

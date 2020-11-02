@@ -19,14 +19,27 @@ public class ConfigBean {
     ClientBean clientBean;
     @EJB
     DesignerBean designerBean;
+    @EJB
+    FamilyProductBean familyProductBean;
+    @EJB
+    TypeProductBean typeProductBean;
+    @EJB
+    ProductBean productBean;
+    @EJB
+    StructureBean structureBean;
 
     @PostConstruct
-    void populateDB(){
+    void populateDB() {
 
         try {
-            clientBean.create("Jose","jose@mail.pt", "123456", "asdasfgafdg");
+            clientBean.create("Jose", "jose@mail.pt", "123456", "asdasfgafdg");
             designerBean.create("Joao", "joao@mail.pt");
             projectBean.create("JoseProjeto", "Jose", "Joao");
+            structureBean.create("ASDasd", "JoseProjeto");
+            typeProductBean.create("Tipo");
+            familyProductBean.create("Familia");
+            productBean.create("Product", "Tipo", "Familia");
+//            structureBean.productOnStru("Product", "ASDasd");
         } catch (Exception exception){
             LOGGER.log(Level.SEVERE, exception.getMessage());
         }
