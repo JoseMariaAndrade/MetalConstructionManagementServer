@@ -1,18 +1,26 @@
 package dtos;
 
+import entities.Structure;
+
+import java.util.ArrayList;
+import java.util.List;
+
 public class ProjectDTO {
 
     private String name;
     private String client;
     private String designer;
+    private List<Structure> structures;
 
     public ProjectDTO() {
+        this.structures = new ArrayList<>();
     }
 
     public ProjectDTO(String name, String client, String designer) {
         this.name = name;
         this.client = client;
         this.designer = designer;
+        this.structures = new ArrayList<>();
     }
 
     public String getName() {

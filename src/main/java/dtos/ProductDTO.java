@@ -1,26 +1,20 @@
 package dtos;
 
-import entities.Structure;
-
-import java.util.ArrayList;
-import java.util.List;
-
 public class ProductDTO {
 
     private String name;
-    private String client;
-    private String designer;
-    private List<Structure> structures;
+    private String type;
+    private String family;
+    private String manufacturer;
 
     public ProductDTO() {
-        this.structures = new ArrayList<>();
     }
 
-    public ProductDTO(String name, String client, String designer) {
+    public ProductDTO(String name, String type, String family, String manufacturer) {
         this.name = name;
-        this.client = client;
-        this.designer = designer;
-        this.structures = new ArrayList<>();
+        this.type = type;
+        this.family = family;
+        this.manufacturer = manufacturer;
     }
 
     public String getName() {
@@ -31,27 +25,27 @@ public class ProductDTO {
         this.name = name;
     }
 
-    public String getClient() {
-        return client;
+    public String getType() {
+        return type;
     }
 
-    public void setClient(String client) {
-        this.client = client;
+    public void setType(String type) {
+        this.type = type;
     }
 
-    public String getDesigner() {
-        return designer;
+    public String getFamily() {
+        return family;
     }
 
-    public void setDesigner(String designer) {
-        this.designer = designer;
+    public void setFamily(String family) {
+        this.family = family;
     }
 
-    public List<Structure> getStructures() {
-        return structures;
+    public String getManufacturer() {
+        return manufacturer;
     }
 
-    public void setStructures(List<Structure> structures) {
-        this.structures = structures;
+    public void setManufacturer(String manufacturer) {
+        this.manufacturer = manufacturer;
     }
 }

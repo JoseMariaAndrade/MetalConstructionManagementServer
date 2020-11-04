@@ -27,16 +27,20 @@ public class Product implements Serializable {
             joinColumns = @JoinColumn(name = "PRODUCT_NAME", referencedColumnName = "NAME"),
             inverseJoinColumns = @JoinColumn(name = "STRUCTURE_NAME", referencedColumnName = "NAME"))
     private List<Structure> structures;
+    @ManyToOne
+    @JoinColumn(name = "MANUFACTURER_NAME")
+    private Manufacturer manufacturer;
 
 
     public Product() {
         this.structures = new ArrayList<>();
     }
 
-    public Product(String name, @NotNull TypeProduct typeProduct, @NotNull FamilyProduct familyProduct) {
+    public Product(String name, @NotNull TypeProduct typeProduct, @NotNull FamilyProduct familyProduct, @NotNull Manufacturer manufacturer) {
         this.name = name;
         this.typeProduct = typeProduct;
         this.familyProduct = familyProduct;
+        this.manufacturer = manufacturer;
         this.structures = new ArrayList<>();
     }
 
@@ -70,5 +74,13 @@ public class Product implements Serializable {
 
     public void setStructures(List<Structure> structures) {
         this.structures = structures;
+    }
+
+    public Manufacturer getManufacturer() {
+        return manufacturer;
+    }
+
+    public void setManufacturer(Manufacturer manufacturer) {
+        this.manufacturer = manufacturer;
     }
 }

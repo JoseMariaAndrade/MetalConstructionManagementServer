@@ -85,14 +85,14 @@ public class Project implements Serializable {
 //    public void setFiles(List<File> files) {
 //        this.files = files;
 //    }
-//
-//    public List<Structure> getStructures() {
-//        return structures;
-//    }
-//
-//    public void setStructures(List<Structure> structures) {
-//        this.structures = structures;
-//    }
+
+    public List<Structure> getStructures() {
+        return structures;
+    }
+
+    public void setStructures(List<Structure> structures) {
+        this.structures = structures;
+    }
 
 
     public int getVersion() {

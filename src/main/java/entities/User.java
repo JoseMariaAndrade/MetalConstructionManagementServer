@@ -1,6 +1,9 @@
 package entities;
 
-import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
+import javax.persistence.Version;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
@@ -9,17 +12,17 @@ import java.io.Serializable;
 @Table(name = "USERS")
 public class User implements Serializable {
 
-    /*@Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;*/
+    //    @Id
+//    @GeneratedValue(strategy = GenerationType.IDENTITY)
+//    private Long id;
     @Id
     @NotNull
     private String name;
     @NotNull
     @Email
     private String emaill;
-//    @Version
-//    private int version;
+    @Version
+    private int version;
 
     public User() {
     }
@@ -51,5 +54,13 @@ public class User implements Serializable {
 
     public void setEmaill(String emaill) {
         this.emaill = emaill;
+    }
+
+    public int getVersion() {
+        return version;
+    }
+
+    public void setVersion(int version) {
+        this.version = version;
     }
 }
