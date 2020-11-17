@@ -1,7 +1,7 @@
 package ws;
 
 import dtos.TypeProductDTO;
-import ebjs.TypeProductBean;
+import ejbs.TypeProductBean;
 import entities.TypeProduct;
 import exceptions.MyConstraintViolationException;
 import exceptions.MyEntityExistsException;

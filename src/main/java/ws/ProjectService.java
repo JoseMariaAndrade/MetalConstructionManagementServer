@@ -1,7 +1,7 @@
 package ws;
 
 import dtos.ProjectDTO;
-import ebjs.ProjectBean;
+import ejbs.ProjectBean;
 import entities.Project;
 import exceptions.MyConstraintViolationException;
 import exceptions.MyEntityExistsException;
@@ -26,7 +26,9 @@ public class ProjectService {
     private ProjectDTO toDTO(Project project){
         ProjectDTO projectDTO = new ProjectDTO(
                 project.getName(),
+                project.getClient().getId(),
                 project.getClient().getName(),
+                project.getDesigner().getId(),
                 project.getDesigner().getName()
         );
 
@@ -62,8 +64,8 @@ public class ProjectService {
 
         projectBean.create(
                 projectDTO.getName(),
-                projectDTO.getClient(),
-                projectDTO.getDesigner()
+                projectDTO.getIdClient(),
+                projectDTO.getIdDesigner()
         );
 
         return Response.status(Response.Status.CREATED).build();
@@ -75,8 +77,8 @@ public class ProjectService {
 
         projectBean.update(
                 projectDTO.getName(),
-                projectDTO.getClient(),
-                projectDTO.getDesigner()
+                projectDTO.getIdClient(),
+                projectDTO.getIdDesigner()
         );
 
         return Response.status(Response.Status.CREATED).build();

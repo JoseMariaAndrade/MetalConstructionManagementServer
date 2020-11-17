@@ -2,7 +2,7 @@ package ws;
 
 import dtos.DesignerDTO;
 import dtos.ProjectDTO;
-import ebjs.DesignerBean;
+import ejbs.DesignerBean;
 import entities.Designer;
 import entities.Project;
 import exceptions.MyConstraintViolationException;
@@ -27,14 +27,18 @@ public class DesignerService {
 
     private DesignerDTO toDTONoProjects(Designer designer) {
         return new DesignerDTO(
+                designer.getId(),
                 designer.getName(),
+                designer.getPassword(),
                 designer.getEmaill()
         );
     }
 
     private DesignerDTO toDTO(Designer designer) {
         DesignerDTO designerDTO = new DesignerDTO(
+                designer.getId(),
                 designer.getName(),
+                designer.getPassword(),
                 designer.getEmaill()
         );
 
@@ -51,8 +55,11 @@ public class DesignerService {
     private ProjectDTO toDTO(Project project){
         return new ProjectDTO(
                 project.getName(),
+                project.getClient().getId(),
                 project.getClient().getName(),
+                project.getDesigner().getId(),
                 project.getDesigner().getName()
+
         );
     }
 
@@ -67,10 +74,10 @@ public class DesignerService {
     }
 
     @GET
-    @Path("{name}")
-    public Response getDesignerDetails(@PathParam("name") String name) {
+    @Path("{id}")
+    public Response getDesignerDetails(@PathParam("id") Long id) {
 
-        Designer designer = designerBean.findDesigner(name);
+        Designer designer = designerBean.findDesigner(id);
 
         if (designer != null)
             return Response.status(Response.Status.OK).entity(toDTO(designer)).build();
@@ -85,6 +92,7 @@ public class DesignerService {
 
         designerBean.create(
                 designerDTO.getName(),
+                designerDTO.getPassword(),
                 designerDTO.getEmail()
         );
 
@@ -96,7 +104,9 @@ public class DesignerService {
             throws MyEntityNotFoundException, MyConstraintViolationException {
 
         designerBean.update(
+                designerDTO.getId(),
                 designerDTO.getName(),
+                designerDTO.getPassword(),
                 designerDTO.getEmail()
         );
 
@@ -104,11 +114,11 @@ public class DesignerService {
     }
 
     @DELETE
-    @Path("{name}")
-    public Response delete(@PathParam("name") String name)
+    @Path("{id}")
+    public Response delete(@PathParam("id") Long id)
             throws MyEntityNotFoundException {
 
-        designerBean.delete(name);
+        designerBean.delete(id);
 
         return Response.status(Response.Status.ACCEPTED).build();
     }

@@ -1,4 +1,4 @@
-package ebjs;
+package ejbs;
 
 import entities.Project;
 import entities.Structure;

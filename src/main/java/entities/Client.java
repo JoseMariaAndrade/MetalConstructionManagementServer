@@ -18,22 +18,20 @@ public class Client extends User implements Serializable {
     private String contact;
     @NotNull
     private String morada;
-    @OneToMany(mappedBy = "client")
+    @OneToMany(mappedBy = "client", cascade = CascadeType.REMOVE)
     private List<Project> projects;
-    @Version
-    private int version;
 
     public Client() {
         super();
     }
 
-    public Client(@NotNull String name, @NotNull @Email String email) {
-        super(name, email);
+    public Client(@NotNull String name, @NotNull String password, @NotNull @Email String email) {
+        super(name, password, email);
         this.projects = new ArrayList<>();
     }
 
-    public Client(@NotNull String name, @NotNull @Email String emaill, @NotNull String contact, @NotNull String morada) {
-        super(name, emaill);
+    public Client(@NotNull String name, @NotNull String password, @NotNull @Email String emaill, @NotNull String contact, @NotNull String morada) {
+        super(name, password, emaill);
         this.contact = contact;
         this.morada = morada;
         this.projects = new ArrayList<>();
@@ -61,13 +59,5 @@ public class Client extends User implements Serializable {
 
     public void setProjects(List<Project> projects) {
         this.projects = projects;
-    }
-
-    public int getVersion() {
-        return version;
-    }
-
-    public void setVersion(int version) {
-        this.version = version;
     }
 }

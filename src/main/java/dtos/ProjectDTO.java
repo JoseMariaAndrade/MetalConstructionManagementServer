@@ -8,18 +8,22 @@ import java.util.List;
 public class ProjectDTO {
 
     private String name;
-    private String client;
-    private String designer;
+    private Long idClient;
+    private String nameClient;
+    private Long idDesigner;
+    private String nameDesigner;
     private List<Structure> structures;
 
     public ProjectDTO() {
         this.structures = new ArrayList<>();
     }
 
-    public ProjectDTO(String name, String client, String designer) {
+    public ProjectDTO(String name, Long idClient, String nameClient, Long idDesigner, String nameDesigner) {
         this.name = name;
-        this.client = client;
-        this.designer = designer;
+        this.idClient = idClient;
+        this.nameClient = nameClient;
+        this.idDesigner = idDesigner;
+        this.nameDesigner = nameDesigner;
         this.structures = new ArrayList<>();
     }
 
@@ -31,19 +35,43 @@ public class ProjectDTO {
         this.name = name;
     }
 
-    public String getClient() {
-        return client;
+    public Long getIdClient() {
+        return idClient;
     }
 
-    public void setClient(String client) {
-        this.client = client;
+    public void setIdClient(Long idClient) {
+        this.idClient = idClient;
     }
 
-    public String getDesigner() {
-        return designer;
+    public String getNameClient() {
+        return nameClient;
     }
 
-    public void setDesigner(String designer) {
-        this.designer = designer;
+    public void setNameClient(String nameClient) {
+        this.nameClient = nameClient;
+    }
+
+    public Long getIdDesigner() {
+        return idDesigner;
+    }
+
+    public void setIdDesigner(Long idDesigner) {
+        this.idDesigner = idDesigner;
+    }
+
+    public String getNameDesigner() {
+        return nameDesigner;
+    }
+
+    public void setNameDesigner(String nameDesigner) {
+        this.nameDesigner = nameDesigner;
+    }
+
+    public List<Structure> getStructures() {
+        return structures;
+    }
+
+    public void setStructures(List<Structure> structures) {
+        this.structures = structures;
     }
 }

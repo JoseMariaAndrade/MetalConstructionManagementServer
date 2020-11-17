@@ -5,16 +5,22 @@ public class ProductDTO {
     private String name;
     private String type;
     private String family;
-    private String manufacturer;
+    private Long manufacturer;
 
     public ProductDTO() {
     }
 
-    public ProductDTO(String name, String type, String family, String manufacturer) {
+    public ProductDTO(String name, String type, String family, Long manufacturer) {
         this.name = name;
         this.type = type;
         this.family = family;
         this.manufacturer = manufacturer;
+    }
+
+    public ProductDTO(String name, String type, String family) {
+        this.name = name;
+        this.type = type;
+        this.family = family;
     }
 
     public String getName() {
@@ -41,11 +47,11 @@ public class ProductDTO {
         this.family = family;
     }
 
-    public String getManufacturer() {
+    public Long getManufacturer() {
         return manufacturer;
     }
 
-    public void setManufacturer(String manufacturer) {
+    public void setManufacturer(Long manufacturer) {
         this.manufacturer = manufacturer;
     }
 }

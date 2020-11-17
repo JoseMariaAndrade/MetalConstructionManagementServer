@@ -1,6 +1,6 @@
-package ebjs;
+package ejbs;
 
-import entities.Client;
+import entities.Designer;
 import exceptions.MyConstraintViolationException;
 import exceptions.MyEntityExistsException;
 import exceptions.MyEntityNotFoundException;
@@ -13,66 +13,65 @@ import javax.validation.ConstraintViolationException;
 import java.util.List;
 
 @Stateless
-public class ClientBean {
+public class DesignerBean {
 
     @PersistenceContext
     EntityManager entityManager;
 
-    public void create(String name, String email, String contact, String address)
+    public void create(String name, String password, String email)
             throws MyEntityExistsException, MyConstraintViolationException {
 
-        Client client = findClient(name);
-
-        if (client != null)
-            throw new MyEntityExistsException("");
-
-        try{
-            client = new Client(name, email, contact, address);
-            entityManager.persist(client);
-
-        } catch (ConstraintViolationException constraintViolationException) {
-            throw new MyConstraintViolationException(constraintViolationException);
-        }
-
-    }
-
-    public List<Client> getAll() {
-        return entityManager.createNamedQuery("getAllClients").getResultList();
-    }
-
-    public Client findClient(String name) {
-        return entityManager.find(Client.class, name);
-    }
-
-    public void update(String name, String email, String contact, String address)
-            throws MyEntityNotFoundException, MyConstraintViolationException {
-
-        Client client = findClient(name);
-
-        if (client == null) {
-            throw new MyEntityNotFoundException("");
-        }
+//        Designer designer = findDesigner(name);
+//
+//        if (designer != null)
+//            throw new MyEntityExistsException("");
 
         try {
-            entityManager.lock(client, LockModeType.OPTIMISTIC);
-            client.setEmaill(email);
-            client.setContact(contact);
-            client.setMorada(address);
+
+            Designer designer = new Designer(name, password, email);
+            entityManager.persist(designer);
 
         } catch (ConstraintViolationException constraintViolationException) {
             throw new MyConstraintViolationException(constraintViolationException);
         }
-
     }
 
-    public void delete(String name)
-            throws MyEntityNotFoundException {
+    public List<Designer> getAll() {
+        return entityManager.createNamedQuery("getAllDesigners").getResultList();
+    }
 
-        Client client = findClient(name);
+    public Designer findDesigner(Long id) {
+        return entityManager.find(Designer.class, id);
+    }
 
-        if (client == null)
+    public void update(Long id, String name, String password, String email)
+            throws MyEntityNotFoundException, MyConstraintViolationException {
+
+        Designer designer = findDesigner(id);
+
+        if (designer == null)
             throw new MyEntityNotFoundException("");
 
-        entityManager.remove(client);
+        try {
+
+            entityManager.lock(designer, LockModeType.OPTIMISTIC);
+            designer.setName(name);
+            designer.setPassword(password);
+            designer.setEmaill(email);
+
+        } catch (ConstraintViolationException constraintViolationException) {
+            throw new MyConstraintViolationException(constraintViolationException);
+        }
+    }
+
+    public void delete(Long id)
+            throws MyEntityNotFoundException {
+
+        Designer designer = findDesigner(id);
+
+        if (designer == null)
+            throw new MyEntityNotFoundException("");
+
+        entityManager.remove(designer);
     }
 }

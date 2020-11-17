@@ -1,9 +1,6 @@
 package entities;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
-import javax.persistence.Version;
+import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
@@ -12,12 +9,13 @@ import java.io.Serializable;
 @Table(name = "USERS")
 public class User implements Serializable {
 
-    //    @Id
-//    @GeneratedValue(strategy = GenerationType.IDENTITY)
-//    private Long id;
     @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Long id;
     @NotNull
     private String name;
+    @NotNull
+    private String password;
     @NotNull
     @Email
     private String emaill;
@@ -27,18 +25,19 @@ public class User implements Serializable {
     public User() {
     }
 
-    public User(@NotNull String name, @NotNull @Email String emaill) {
+    public User(@NotNull String name, @NotNull String password, @NotNull @Email String emaill) {
         this.name = name;
+        this.password = password;
         this.emaill = emaill;
     }
 
-//    public Long getId() {
-//        return id;
-//    }
-//
-//    public void setId(Long id) {
-//        this.id = id;
-//    }
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
 
     public String getName() {
         return name;
@@ -46,6 +45,14 @@ public class User implements Serializable {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 
     public String getEmaill() {

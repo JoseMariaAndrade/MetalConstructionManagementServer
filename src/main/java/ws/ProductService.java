@@ -1,7 +1,7 @@
 package ws;
 
 import dtos.ProductDTO;
-import ebjs.ProductBean;
+import ejbs.ProductBean;
 import entities.Product;
 import exceptions.MyConstraintViolationException;
 import exceptions.MyEntityExistsException;
@@ -28,7 +28,7 @@ public class ProductService {
                 product.getName(),
                 product.getTypeProduct().getDescription(),
                 product.getFamilyProduct().getName(),
-                product.getManufacturer().getName()
+                product.getManufacturer().getId()
         );
     }
 

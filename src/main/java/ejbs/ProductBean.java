@@ -1,4 +1,4 @@
-package ebjs;
+package ejbs;
 
 import entities.FamilyProduct;
 import entities.Manufacturer;
@@ -22,7 +22,7 @@ public class ProductBean {
     @PersistenceContext
     EntityManager entityManager;
 
-    public void create(String name, String descriptionTypeProduct, String familyProductName, String manufacturerName)
+    public void create(String name, String descriptionTypeProduct, String familyProductName, Long idManufacturer)
             throws MyEntityExistsException, MyEntityNotFoundException, MyConstraintViolationException, MyIllegalArgumentException {
 
         Product product = findProduct(name);
@@ -40,18 +40,24 @@ public class ProductBean {
         if (familyProduct == null)
             throw new MyEntityNotFoundException("");
 
-        Manufacturer manufacturer = entityManager.find(Manufacturer.class, manufacturerName);
+        Manufacturer manufacturer = entityManager.find(Manufacturer.class, idManufacturer);
 
         if (manufacturer == null)
             throw new MyEntityNotFoundException("");
 
         try {
             product = new Product(name, typeProduct, familyProduct, manufacturer);
+            addProductToManufacturer(product, manufacturer);
             entityManager.persist(product);
 
         } catch (ConstraintViolationException constraintViolationException) {
             throw new MyConstraintViolationException(constraintViolationException);
         }
+    }
+
+    private void addProductToManufacturer(Product product, Manufacturer manufacturer) {
+        if (!manufacturer.getProducts().contains(product))
+            manufacturer.getProducts().add(product);
     }
 
     public List<Product> getAll() {
@@ -73,7 +79,7 @@ public class ProductBean {
         entityManager.remove(product);
     }
 
-    public void update(String name, String description, String familyName, String manufacturerName)
+    public void update(String name, String description, String familyName, Long idManufacturer)
             throws MyEntityNotFoundException, MyConstraintViolationException {
 
         Product product = findProduct(name);
@@ -91,7 +97,7 @@ public class ProductBean {
         if (familyProduct == null)
             throw new MyEntityNotFoundException("");
 
-        Manufacturer manufacturer = entityManager.find(Manufacturer.class, manufacturerName);
+        Manufacturer manufacturer = entityManager.find(Manufacturer.class, idManufacturer);
 
         if (manufacturer == null)
             throw new MyEntityNotFoundException("");
@@ -102,6 +108,7 @@ public class ProductBean {
             product.setTypeProduct(typeProduct);
             product.setFamilyProduct(familyProduct);
             product.setManufacturer(manufacturer);
+            addProductToManufacturer(product, manufacturer);
 
         } catch (ConstraintViolationException constraintViolationException) {
             throw new MyConstraintViolationException(constraintViolationException);

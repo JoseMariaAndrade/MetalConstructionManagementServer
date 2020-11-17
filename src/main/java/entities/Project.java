@@ -19,17 +19,18 @@ public class Project implements Serializable {
     @Id
     @NotNull
     private String name;
-    @ManyToOne
+    //public List<File> files;
+    @OneToMany(mappedBy = "project", cascade = CascadeType.REMOVE)
+    public List<Structure> structures;
+    @ManyToOne(cascade = CascadeType.REMOVE)
     @JoinColumn(name = "PROJECT_CLIENT_NAME")
     @NotNull
     private Client client;
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.REMOVE)
     @JoinColumn(name = "PROJECT_DESIGNER_NAME")
     @NotNull
     private Designer designer;
-    //public List<File> files;
-    @OneToMany(mappedBy = "project")
-    public List<Structure> structures;
+    private String approve;
     @Version
     private int version;
 
@@ -42,6 +43,7 @@ public class Project implements Serializable {
         this.name = name;
         this.client = client;
         this.designer = designer;
+        this.approve = null;
 //        this.files = new ArrayList<>();
 //        this.structures = new ArrayList<>();
     }
@@ -94,6 +96,13 @@ public class Project implements Serializable {
         this.structures = structures;
     }
 
+    public String getApprove() {
+        return approve;
+    }
+
+    public void setApprove(String approve) {
+        this.approve = approve;
+    }
 
     public int getVersion() {
         return version;

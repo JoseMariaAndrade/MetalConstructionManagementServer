@@ -2,12 +2,14 @@ package ws;
 
 import dtos.ClientDTO;
 import dtos.ProjectDTO;
-import ebjs.ClientBean;
+import ejbs.ClientBean;
+import ejbs.ProjectBean;
 import entities.Client;
 import entities.Project;
 import exceptions.MyConstraintViolationException;
 import exceptions.MyEntityExistsException;
 import exceptions.MyEntityNotFoundException;
+import exceptions.MyIllegalArgumentException;
 
 import javax.ejb.EJB;
 import javax.ws.rs.*;
@@ -24,9 +26,14 @@ public class ClientService {
     @EJB
     ClientBean clientBean;
 
+    @EJB
+    ProjectBean projectBean;
+
     private ClientDTO toDTONoProjects(Client client) {
         return new ClientDTO(
+                client.getId(),
                 client.getName(),
+                client.getPassword(),
                 client.getEmaill(),
                 client.getContact(),
                 client.getMorada()
@@ -39,7 +46,9 @@ public class ClientService {
 
     private ClientDTO toDTO(Client client) {
         ClientDTO clientDTO = new ClientDTO(
+                client.getId(),
                 client.getName(),
+                client.getPassword(),
                 client.getEmaill(),
                 client.getContact(),
                 client.getMorada()
@@ -58,7 +67,9 @@ public class ClientService {
     private ProjectDTO toDTO(Project project) {
         return new ProjectDTO(
                 project.getName(),
+                project.getClient().getId(),
                 project.getClient().getName(),
+                project.getDesigner().getId(),
                 project.getDesigner().getName()
         );
     }
@@ -76,6 +87,7 @@ public class ClientService {
 
         clientBean.create(
                 clientDTO.getName(),
+                clientDTO.getPassword(),
                 clientDTO.getEmail(),
                 clientDTO.getContact(),
                 clientDTO.getAddress()
@@ -84,11 +96,21 @@ public class ClientService {
         return Response.status(Response.Status.CREATED).build();
     }
 
-    @GET
-    @Path("{name}")
-    public Response getClientDeatils(@PathParam("name") String name){
+    @POST
+    @Path("{id}/approve/{nameProject}")
+    public Response create(@PathParam("id") Long id, @PathParam("nameProject") String nameProject)
+            throws MyEntityNotFoundException, MyIllegalArgumentException, MyConstraintViolationException {
 
-        Client client = clientBean.findClient(name);
+        clientBean.approveProject(id, nameProject);
+
+        return Response.status(Response.Status.OK).build();
+    }
+
+    @GET
+    @Path("{id}")
+    public Response getClientDeatils(@PathParam("id") Long id) {
+
+        Client client = clientBean.findClient(id);
 
         if (client != null) {
             return Response.status(Response.Status.OK).entity(toDTO(client)).build();
@@ -102,7 +124,9 @@ public class ClientService {
             throws MyEntityNotFoundException, MyConstraintViolationException {
 
         clientBean.update(
+                clientDTO.getId(),
                 clientDTO.getName(),
+                clientDTO.getPassword(),
                 clientDTO.getEmail(),
                 clientDTO.getContact(),
                 clientDTO.getAddress()
@@ -112,11 +136,11 @@ public class ClientService {
     }
 
     @DELETE
-    @Path("{name}")
-    public Response delete(@PathParam("name") String name)
+    @Path("{id}")
+    public Response delete(@PathParam("id") Long id)
             throws MyEntityNotFoundException {
 
-        clientBean.delete(name);
+        clientBean.delete(id);
 
         return Response.status(Response.Status.ACCEPTED).build();
     }

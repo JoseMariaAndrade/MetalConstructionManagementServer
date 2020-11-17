@@ -1,4 +1,4 @@
-package ebjs;
+package ejbs;
 
 import entities.Client;
 import entities.Designer;
@@ -21,22 +21,22 @@ public class ProjectBean {
     @PersistenceContext
     EntityManager entityManager;
 
-    public void create(String name, String nameClient, String nameDesigner)
+    public void create(String name, Long idClient, Long idDesigner)
             throws MyEntityNotFoundException, MyEntityExistsException, MyConstraintViolationException, MyIllegalArgumentException {
 
         Project project = findProject(name);
-        if (project != null){
-            throw  new MyEntityExistsException(String.format("Project with name %s already exists", name));
+        if (project != null) {
+            throw new MyEntityExistsException(String.format("Project with name %s already exists", name));
         }
 
-        Client client = entityManager.find(Client.class, nameClient);
-        if (client == null){
-            throw new MyEntityNotFoundException(String.format("%s", nameClient));
+        Client client = entityManager.find(Client.class, idClient);
+        if (client == null) {
+            throw new MyEntityNotFoundException(String.format("%s", "asd"));
         }
 
-        Designer designer = entityManager.find(Designer.class, nameDesigner);
+        Designer designer = entityManager.find(Designer.class, idDesigner);
         if (designer == null){
-            throw new MyEntityNotFoundException(String.format("%s", nameDesigner));
+            throw new MyEntityNotFoundException(String.format("%s", "nameDesigner"));
         }
 
         try {
@@ -70,7 +70,7 @@ public class ProjectBean {
         entityManager.remove(project);
     }
 
-    public void update(String name, String clientName, String designerName)
+    public void update(String name, Long idClient, Long idDesigner)
             throws MyEntityNotFoundException, MyConstraintViolationException {
 
         Project project = entityManager.find(Project.class, name);
@@ -78,12 +78,12 @@ public class ProjectBean {
         if (project == null)
             throw new MyEntityNotFoundException("ERROR");
 
-        Client client = entityManager.find(Client.class, clientName);
+        Client client = entityManager.find(Client.class, idClient);
 
         if (client == null)
             throw new MyEntityNotFoundException("");
 
-        Designer designer = entityManager.find(Designer.class, designerName);
+        Designer designer = entityManager.find(Designer.class, idDesigner);
 
         if (designer == null)
             throw new MyEntityNotFoundException("");

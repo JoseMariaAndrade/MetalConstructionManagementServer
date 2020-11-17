@@ -1,8 +1,10 @@
 package ws;
 
 import dtos.ManufacturerDTO;
-import ebjs.ManufacturerBean;
+import dtos.ProductDTO;
+import ejbs.ManufacturerBean;
 import entities.Manufacturer;
+import entities.Product;
 import exceptions.MyConstraintViolationException;
 import exceptions.MyEntityExistsException;
 import exceptions.MyEntityNotFoundException;
@@ -23,28 +25,56 @@ public class ManufacturerService {
     @EJB
     ManufacturerBean manufacturerBean;
 
-    private ManufacturerDTO toDTO(Manufacturer manufacturer) {
+    private ManufacturerDTO toDTONoProducts(Manufacturer manufacturer) {
         return new ManufacturerDTO(
+                manufacturer.getId(),
                 manufacturer.getName(),
+                manufacturer.getPassword(),
                 manufacturer.getEmaill()
         );
     }
 
-    private List<ManufacturerDTO> toDTOs(List<Manufacturer> manufacturers) {
-        return manufacturers.stream().map(this::toDTO).collect(Collectors.toList());
+    private ManufacturerDTO toDTO(Manufacturer manufacturer) {
+        ManufacturerDTO manufacturerDTO = new ManufacturerDTO(
+                manufacturer.getId(),
+                manufacturer.getName(),
+                manufacturer.getPassword(),
+                manufacturer.getEmaill()
+        );
+
+        List<ProductDTO> productDTOS = productsToDTOs(manufacturer.getProducts());
+        manufacturerDTO.setProducts(productDTOS);
+
+        return manufacturerDTO;
+    }
+
+    private List<ProductDTO> productsToDTOs(List<Product> products) {
+        return products.stream().map(this::toDTO).collect(Collectors.toList());
+    }
+
+    private ProductDTO toDTO(Product product) {
+        return new ProductDTO(
+                product.getName(),
+                product.getTypeProduct().getDescription(),
+                product.getFamilyProduct().getName()
+        );
+    }
+
+    private List<ManufacturerDTO> toDTOsNoProducts(List<Manufacturer> manufacturers) {
+        return manufacturers.stream().map(this::toDTONoProducts).collect(Collectors.toList());
     }
 
     @GET
     @Path("/")
     public List<ManufacturerDTO> getAllManufacturersWS() {
-        return toDTOs(manufacturerBean.getAll());
+        return toDTOsNoProducts(manufacturerBean.getAll());
     }
 
     @GET
-    @Path("{name}")
-    public Response getManufacturerDetails(@PathParam("name") String name) {
+    @Path("{id}")
+    public Response getManufacturerDetails(@PathParam("id") Long id) {
 
-        Manufacturer manufacturer = manufacturerBean.findManufacturer(name);
+        Manufacturer manufacturer = manufacturerBean.findManufacturer(id);
 
         if (manufacturer != null)
             return Response.status(Response.Status.OK).entity(toDTO(manufacturer)).build();
@@ -59,6 +89,7 @@ public class ManufacturerService {
 
         manufacturerBean.create(
                 manufacturerDTO.getName(),
+                manufacturerDTO.getPassword(),
                 manufacturerDTO.getEmail()
         );
 
@@ -70,7 +101,9 @@ public class ManufacturerService {
             throws MyEntityNotFoundException, MyConstraintViolationException {
 
         manufacturerBean.update(
+                manufacturerDTO.getId(),
                 manufacturerDTO.getName(),
+                manufacturerDTO.getPassword(),
                 manufacturerDTO.getEmail()
         );
 
@@ -78,10 +111,11 @@ public class ManufacturerService {
     }
 
     @DELETE
-    @Path("{name}")
-    public Response delete(@PathParam("name") String name)
+    @Path("{id}")
+    public Response delete(@PathParam("id") Long id)
             throws MyEntityNotFoundException {
-        manufacturerBean.delete(name);
+
+        manufacturerBean.delete(id);
 
         return Response.status(Response.Status.ACCEPTED).build();
     }

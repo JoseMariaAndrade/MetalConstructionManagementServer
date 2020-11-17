@@ -1,4 +1,4 @@
-package ebjs;
+package ejbs;
 
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
@@ -34,14 +34,14 @@ public class ConfigBean {
     void populateDB() {
 
         try {
-            clientBean.create("Jose", "jose@mail.pt", "123456", "asdasfgafdg");
-            designerBean.create("Joao", "joao@mail.pt");
-            manufacturerBean.create("XXX", "zxcx@asd.com");
-            projectBean.create("JoseProjeto", "Jose", "Joao");
+            clientBean.create("Jose", "123", "jose@mail.pt", "123456", "asdasfgafdg");
+            designerBean.create("Joao", "123", "joao@mail.pt");
+            manufacturerBean.create("XXX", "123", "zxcx@asd.com");
+            projectBean.create("JoseProjeto", 1L, 2L);
             structureBean.create("ASDasd", "JoseProjeto");
             typeProductBean.create("Tipo");
             familyProductBean.create("Familia");
-            productBean.create("Product", "Tipo", "Familia", "XXX");
+            productBean.create("Product", "Tipo", "Familia", 3L);
 //            structureBean.productOnStru("Product", "ASDasd");
 
         } catch (Exception exception){

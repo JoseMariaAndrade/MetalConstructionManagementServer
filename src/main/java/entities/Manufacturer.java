@@ -12,7 +12,7 @@ import java.util.List;
 })
 public class Manufacturer extends User {
 
-    @OneToMany(mappedBy = "manufacturer", cascade = CascadeType.PERSIST)
+    @OneToMany(mappedBy = "manufacturer", cascade = CascadeType.REMOVE)
     private List<Product> products;
 
     public Manufacturer() {
@@ -20,8 +20,8 @@ public class Manufacturer extends User {
         this.products = new ArrayList<>();
     }
 
-    public Manufacturer(@NotNull String name, @NotNull @Email String emaill) {
-        super(name, emaill);
+    public Manufacturer(@NotNull String name, @NotNull String password, @NotNull @Email String emaill) {
+        super(name, password, emaill);
         this.products = new ArrayList<>();
     }
 

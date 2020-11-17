@@ -15,11 +15,11 @@ public class Structure implements Serializable {
 
     @Id
     private String name;
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.REMOVE)
     @JoinColumn(name = "PROJECT_NAME")
     @NotNull
     private Project project;
-    @ManyToMany(mappedBy = "structures")
+    @ManyToMany(mappedBy = "structures", cascade = CascadeType.REMOVE)
     @NotNull
     private List<Product> products;
 
