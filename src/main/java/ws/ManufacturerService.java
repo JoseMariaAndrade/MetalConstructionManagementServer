@@ -30,7 +30,7 @@ public class ManufacturerService {
                 manufacturer.getId(),
                 manufacturer.getName(),
                 manufacturer.getPassword(),
-                manufacturer.getEmaill()
+                manufacturer.getEmail()
         );
     }
 
@@ -39,7 +39,7 @@ public class ManufacturerService {
                 manufacturer.getId(),
                 manufacturer.getName(),
                 manufacturer.getPassword(),
-                manufacturer.getEmaill()
+                manufacturer.getEmail()
         );
 
         List<ProductDTO> productDTOS = productsToDTOs(manufacturer.getProducts());

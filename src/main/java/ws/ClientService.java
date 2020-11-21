@@ -34,7 +34,7 @@ public class ClientService {
                 client.getId(),
                 client.getName(),
                 client.getPassword(),
-                client.getEmaill(),
+                client.getEmail(),
                 client.getContact(),
                 client.getMorada()
         );
@@ -49,7 +49,7 @@ public class ClientService {
                 client.getId(),
                 client.getName(),
                 client.getPassword(),
-                client.getEmaill(),
+                client.getEmail(),
                 client.getContact(),
                 client.getMorada()
         );
@@ -108,7 +108,8 @@ public class ClientService {
 
     @GET
     @Path("{id}")
-    public Response getClientDeatils(@PathParam("id") Long id) {
+    public Response getClientDeatils(@PathParam("id") Long id)
+            throws MyEntityNotFoundException {
 
         Client client = clientBean.findClient(id);
 

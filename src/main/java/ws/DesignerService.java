@@ -30,7 +30,7 @@ public class DesignerService {
                 designer.getId(),
                 designer.getName(),
                 designer.getPassword(),
-                designer.getEmaill()
+                designer.getEmail()
         );
     }
 
@@ -39,7 +39,7 @@ public class DesignerService {
                 designer.getId(),
                 designer.getName(),
                 designer.getPassword(),
-                designer.getEmaill()
+                designer.getEmail()
         );
 
         List<ProjectDTO> projectDTOs = projectsToDTOs(designer.getProjects());

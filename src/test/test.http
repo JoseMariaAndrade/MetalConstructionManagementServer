@@ -1,0 +1,42 @@
+### Get JWT token
+POST http://localhost:8080/metalconstruction/api/login/token
+Content-Type: application/x-www-form-urlencoded
+email=jose@mail.pt&password=123
+
+### Who am I?
+GET http://localhost:8080/metalconstruction/api/login/claims
+Accept: application/json
+Authorization: Bearer eyJ0eXAiOiJqd3QiLCJhbGciOiJSUzI1NiJ9.eyJzdWIiOiJqb3NlQG1haWwucHQiLCJpc3MiOiJxdWlja3N0YXJ0LWp3dC1pc3N1ZXIiLCJhdWQiOiJqd3QtYXVkaWVuY2UiLCJncm91cHMiOlsiQ2xpZW50Il0sImV4cCI6MTYwNTkzMDQ3MH0.LLdc5D0ILS5I7wuPjQre2unuleOZgHMr2uuIHcem6wsUrHG_ZRVtJ_425WaBqjK8u8NzQ3wbOIOFDeR02eZ25RcKklAWAvWXJ4d6qCNGEHYDjfJxu8feqTZLJbRG14yMzsd_7eInp7XtG5tk3l2CQYl_qV7pudW3I3ZrXmq5xOf-9GUby80MDGg8odFdnYxLSsQhs-sCi_Xt-F9d4ljtaUbien_MeHD2LDeEb-Psf1zElRug7C6TahQfHmhQ9VrdTppqesjLQfXcXq_0hejx3VBVYcIjD-aCXJ2aOdNpyNB9KRTbnqfOMDgdCFh5-y9RonRxazCOxVfuC8khU6O-wg
+
+##### Get students list
+GET http://localhost:8080/metalconstruction/api/clients
+Accept: application/json
+Authorization: Bearer eyJ0eXAiOiJqd3QiLCJhbGciOiJSUzI1NiJ9.eyJzdWIiOiJqb3NlQG1haWwucHQiLCJpc3MiOiJxdWlja3N0YXJ0LWp3dC1pc3N1ZXIiLCJhdWQiOiJqd3QtYXVkaWVuY2UiLCJncm91cHMiOlsiQ2xpZW50Il0sImV4cCI6MTYwNTkzMDQ3MH0.LLdc5D0ILS5I7wuPjQre2unuleOZgHMr2uuIHcem6wsUrHG_ZRVtJ_425WaBqjK8u8NzQ3wbOIOFDeR02eZ25RcKklAWAvWXJ4d6qCNGEHYDjfJxu8feqTZLJbRG14yMzsd_7eInp7XtG5tk3l2CQYl_qV7pudW3I3ZrXmq5xOf-9GUby80MDGg8odFdnYxLSsQhs-sCi_Xt-F9d4ljtaUbien_MeHD2LDeEb-Psf1zElRug7C6TahQfHmhQ9VrdTppqesjLQfXcXq_0hejx3VBVYcIjD-aCXJ2aOdNpyNB9KRTbnqfOMDgdCFh5-y9RonRxazCOxVfuC8khU6O-wg
+
+### Create new student
+POST http://localhost:8080/academics/api/students
+Content-Type: application/json
+Authorization: Bearer replace this with generated JWT token
+{ "email": "jane@mail.com",
+ "name": "Jane Doe",
+ "username": "1234567",
+ "password": "aaaaa",
+ "courseCode":"1",
+ "courseName": "EI"
+}
+
+### Enroll student in a subject - run after the previous POST
+PUT http://localhost:8080/academics/api/students/1234567/subjects/enroll/1
+Authorization: Bearer replace this with generated JWT token
+
+### Get a student’s details
+GET http://localhost:8080/academics/api/students/1111111
+Accept: application/json
+Authorization: Bearer replace this with generated JWT token
+
+### Delete a student - run after the previous POST
+DELETE http://localhost:8080/academics/api/students/1234567
+Accept: application/json
+Authorization: Bearer replace this with generated JWT token
+
+###

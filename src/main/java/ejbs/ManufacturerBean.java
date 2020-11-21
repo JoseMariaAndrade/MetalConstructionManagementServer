@@ -56,7 +56,7 @@ public class ManufacturerBean {
             entityManager.lock(manufacturer, LockModeType.OPTIMISTIC);
             manufacturer.setName(name);
             manufacturer.setPassword(password);
-            manufacturer.setEmaill(email);
+            manufacturer.setEmail(email);
 
         } catch (ConstraintViolationException constraintViolationException) {
             throw new MyConstraintViolationException(constraintViolationException);

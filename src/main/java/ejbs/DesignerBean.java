@@ -57,7 +57,7 @@ public class DesignerBean {
             entityManager.lock(designer, LockModeType.OPTIMISTIC);
             designer.setName(name);
             designer.setPassword(password);
-            designer.setEmaill(email);
+            designer.setEmail(email);
 
         } catch (ConstraintViolationException constraintViolationException) {
             throw new MyConstraintViolationException(constraintViolationException);

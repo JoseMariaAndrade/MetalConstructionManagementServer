@@ -59,7 +59,7 @@ public class ClientBean {
             entityManager.lock(client, LockModeType.OPTIMISTIC);
             client.setName(name);
             client.setPassword(password);
-            client.setEmaill(email);
+            client.setEmail(email);
             client.setContact(contact);
             client.setMorada(address);
 
