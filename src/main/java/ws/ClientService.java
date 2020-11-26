@@ -1,17 +1,23 @@
 package ws;
 
 import dtos.ClientDTO;
+import dtos.EmailDTO;
 import dtos.ProjectDTO;
+import dtos.StructureDTO;
 import ejbs.ClientBean;
+import ejbs.DesignerBean;
+import ejbs.EmailBean;
 import ejbs.ProjectBean;
 import entities.Client;
 import entities.Project;
+import entities.Structure;
 import exceptions.MyConstraintViolationException;
 import exceptions.MyEntityExistsException;
 import exceptions.MyEntityNotFoundException;
 import exceptions.MyIllegalArgumentException;
 
 import javax.ejb.EJB;
+import javax.mail.MessagingException;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -27,7 +33,13 @@ public class ClientService {
     ClientBean clientBean;
 
     @EJB
+    DesignerBean designerBean;
+
+    @EJB
     ProjectBean projectBean;
+
+    @EJB
+    EmailBean emailBean;
 
     private ClientDTO toDTONoProjects(Client client) {
         return new ClientDTO(
@@ -44,7 +56,7 @@ public class ClientService {
         return clients.stream().map(this::toDTONoProjects).collect(Collectors.toList());
     }
 
-    private ClientDTO toDTO(Client client) {
+    private ClientDTO toDTONoStructures(Client client) {
         ClientDTO clientDTO = new ClientDTO(
                 client.getId(),
                 client.getName(),
@@ -61,16 +73,29 @@ public class ClientService {
     }
 
     private List<ProjectDTO> projectsToDTOs(List<Project> projects) {
-        return projects.stream().map(this::toDTO).collect(Collectors.toList());
+        return projects.stream().map(this::toDTONoStructures).collect(Collectors.toList());
     }
 
-    private ProjectDTO toDTO(Project project) {
+    private ProjectDTO toDTONoStructures(Project project) {
         return new ProjectDTO(
                 project.getName(),
                 project.getClient().getId(),
                 project.getClient().getName(),
                 project.getDesigner().getId(),
-                project.getDesigner().getName()
+                project.getDesigner().getName(),
+                project.getDecision(),
+                project.getObservation()
+        );
+    }
+
+    private List<StructureDTO> structuresToDTOS(List<Structure> structures) {
+        return structures.stream().map(this::toDTONoStructures).collect(Collectors.toList());
+    }
+
+    private StructureDTO toDTONoStructures(Structure structure) {
+        return new StructureDTO(
+                structure.getName(),
+                structure.getProject().getName()
         );
     }
 
@@ -97,24 +122,49 @@ public class ClientService {
     }
 
     @POST
-    @Path("{id}/approve/{nameProject}")
-    public Response create(@PathParam("id") Long id, @PathParam("nameProject") String nameProject)
+    @Path("{id}/project/{nameProject}")
+    public Response create(@PathParam("id") Long id, @PathParam("nameProject") String nameProject, ProjectDTO projectDTO)
             throws MyEntityNotFoundException, MyIllegalArgumentException, MyConstraintViolationException {
 
-        clientBean.approveProject(id, nameProject);
+        clientBean.clientDecicion(id, nameProject, projectDTO.getDecision(), projectDTO.getObservation());
 
         return Response.status(Response.Status.OK).build();
     }
 
     @GET
     @Path("{id}")
-    public Response getClientDeatils(@PathParam("id") Long id)
+    public Response getClientDetails(@PathParam("id") Long id)
             throws MyEntityNotFoundException {
 
         Client client = clientBean.findClient(id);
 
-        if (client != null) {
-            return Response.status(Response.Status.OK).entity(toDTO(client)).build();
+        if (client == null)
+            throw new MyEntityNotFoundException("");
+
+        return Response.status(Response.Status.OK).entity(toDTONoStructures(client)).build();
+    }
+
+    @GET
+    @Path("{id}/project/{name}")
+    public Response getClientProject(@PathParam("id") Long id, @PathParam("name") String name)
+            throws MyEntityNotFoundException {
+
+        Client client = clientBean.findClient(id);
+
+        if (client == null)
+            throw new MyEntityNotFoundException("");
+
+        Project project = projectBean.findProject(name);
+
+        if (project == null)
+            throw new MyEntityNotFoundException("");
+
+        List<Project> projects = client.getProjects();
+
+        for (Project project1 : projects) {
+            if (project1.getName().equals(project.getName())) {
+                return Response.status(Response.Status.OK).entity(toDTONoStructures(project1)).build();
+            }
         }
 
         return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
@@ -144,5 +194,28 @@ public class ClientService {
         clientBean.delete(id);
 
         return Response.status(Response.Status.ACCEPTED).build();
+    }
+
+    @POST
+    @Path("/{id}/email/send")
+    public Response sendEmail(@PathParam("id") Long id, EmailDTO email)
+            throws MyEntityNotFoundException, MessagingException {
+
+        Client client = clientBean.findClient(id);
+
+        if (client == null)
+            throw new MyEntityNotFoundException("");
+
+        Project project = projectBean.findProject(email.getProject());
+        if (project == null)
+            throw new MyEntityNotFoundException("");
+
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append(project.getName());
+        stringBuilder.append(" - ");
+        stringBuilder.append(email.getSubject());
+
+        emailBean.send(project.getDesigner().getEmail(), stringBuilder.toString(), email.getMessage());
+        return Response.status(Response.Status.OK).entity("Email sent").build();
     }
 }

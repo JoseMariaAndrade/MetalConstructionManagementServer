@@ -80,7 +80,7 @@ public class ClientBean {
         entityManager.remove(client);
     }
 
-    public void approveProject(Long id, String nameProject)
+    public void clientDecicion(Long id, String nameProject, Boolean decision, String observation)
             throws MyEntityNotFoundException, MyIllegalArgumentException, MyConstraintViolationException {
 
         Client client = findClient(id);
@@ -97,10 +97,19 @@ public class ClientBean {
         if (!client.getId().equals(project.getClient().getId()))
             throw new MyIllegalArgumentException();
 
+        for (Project project1 : client.getProjects()) {
+            if (project1.getName().equals(project.getName())) {
+                entityManager.lock(client, LockModeType.OPTIMISTIC);
+                project1.setDecision(decision);
+                project1.setObservation(observation);
+            }
+        }
+
         try {
 
             entityManager.lock(project, LockModeType.OPTIMISTIC);
-            project.setApprove("approved");
+            project.setDecision(decision);
+            project.setObservation(observation);
 
         } catch (ConstraintViolationException constraintViolationException) {
             throw new MyConstraintViolationException(constraintViolationException);

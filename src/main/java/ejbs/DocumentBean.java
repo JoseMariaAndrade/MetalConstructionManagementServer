@@ -17,17 +17,18 @@ public class DocumentBean {
     @PersistenceContext
     EntityManager em;
 
-    public void create(String username, String filepath, String filename, String projectName) throws MyEntityNotFoundException, MyConstraintViolationException {
+    public void create(String filepath, String filename, String projectName)
+            throws MyEntityNotFoundException, MyConstraintViolationException {
 
         Project project = em.find(Project.class, projectName);
 
         if (project == null)
 
-        try {
-            Document document = new Document(filepath, filename, project);
-            em.persist(document);
-        } catch (ConstraintViolationException e){
-            throw new MyConstraintViolationException(e);
+            try {
+                Document document = new Document(filepath, filename, project);
+                em.persist(document);
+            } catch (ConstraintViolationException e) {
+                throw new MyConstraintViolationException(e);
         }
 
     }

@@ -32,6 +32,7 @@ public class StructureBean {
 
         try {
             structure = new Structure(name, project);
+            project.structures.add(structure);
             entityManager.persist(structure);
         } catch (ConstraintViolationException constraintViolationException) {
             throw new MyConstraintViolationException(constraintViolationException);
