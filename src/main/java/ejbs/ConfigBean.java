@@ -34,14 +34,20 @@ public class ConfigBean {
     void populateDB() {
 
         try {
-            clientBean.create("Jose", "123", "jose@mail.pt", "123456", "asdasfgafdg");
-            designerBean.create("Joao", "123", "joao@mail.pt");
+//            clientBean.create("Jose", "123", "jose@mail.pt", "123456", "asdasfgafdg");
+//            designerBean.create("Joao", "123", "joao@mail.pt");
             manufacturerBean.create("XXX", "123", "zxcx@asd.com");
-            projectBean.create("JoseProjeto", 1L, 2L);
-            structureBean.create("ASDasd", "JoseProjeto");
-            typeProductBean.create("Tipo");
-            familyProductBean.create("Familia");
-            productBean.create("Product", "Tipo", "Familia", 3L);
+//            projectBean.create("JoseProjeto", 1L, 2L);
+//            structureBean.create("ASDasd", "JoseProjeto");
+            typeProductBean.create("Perfis Enformados a Frio");
+//            typeProductBean.create("Chapa Perfilada");
+//            typeProductBean.create("Laje Mista");
+//            typeProductBean.create("Painel Sandwich");
+            familyProductBean.create("Superomega", "Perfis Enformados a Frio");
+//            familyProductBean.create("Madre C", "Perfis Enformados a Frio");
+//            familyProductBean.create("Madre Z", "Perfis Enformados a Frio");
+//            familyProductBean.create("P0-272-30", "Chapa Perfilada");
+            productBean.create("Product", "Superomega", 1L);
 //            structureBean.productOnStru("Product", "ASDasd");
 
         } catch (Exception exception){

@@ -15,10 +15,6 @@ public class Product implements Serializable {
     @Id
     private String name;
     @ManyToOne
-    @JoinColumn(name = "TYPE_PRODUCT_NAME")
-    @NotNull
-    private TypeProduct typeProduct;
-    @ManyToOne
     @JoinColumn(name = "FAMILY_PRODUCT_NAME")
     @NotNull
     private FamilyProduct familyProduct;
@@ -36,9 +32,8 @@ public class Product implements Serializable {
         this.structures = new ArrayList<>();
     }
 
-    public Product(String name, @NotNull TypeProduct typeProduct, @NotNull FamilyProduct familyProduct, @NotNull Manufacturer manufacturer) {
+    public Product(String name, @NotNull FamilyProduct familyProduct, @NotNull Manufacturer manufacturer) {
         this.name = name;
-        this.typeProduct = typeProduct;
         this.familyProduct = familyProduct;
         this.manufacturer = manufacturer;
         this.structures = new ArrayList<>();
@@ -50,14 +45,6 @@ public class Product implements Serializable {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public TypeProduct getTypeProduct() {
-        return typeProduct;
-    }
-
-    public void setTypeProduct(TypeProduct typeProduct) {
-        this.typeProduct = typeProduct;
     }
 
     public FamilyProduct getFamilyProduct() {

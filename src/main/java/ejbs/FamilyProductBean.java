@@ -1,8 +1,10 @@
 package ejbs;
 
 import entities.FamilyProduct;
+import entities.TypeProduct;
 import exceptions.MyConstraintViolationException;
 import exceptions.MyEntityExistsException;
+import exceptions.MyEntityNotFoundException;
 
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
@@ -16,17 +18,23 @@ public class FamilyProductBean {
     @PersistenceContext
     EntityManager entityManager;
 
-    public void create(String name)
-            throws MyEntityExistsException, MyConstraintViolationException {
+    public void create(String name, String type)
+            throws MyEntityExistsException, MyEntityNotFoundException, MyConstraintViolationException {
 
         FamilyProduct familyProduct = findFamilyProduct(name);
 
         if (familyProduct != null)
             throw new MyEntityExistsException("");
 
+        TypeProduct typeProduct = entityManager.find(TypeProduct.class, type);
+
+        if (typeProduct == null)
+            throw new MyEntityNotFoundException("");
+
         try {
 
-            familyProduct = new FamilyProduct(name);
+            familyProduct = new FamilyProduct(name, typeProduct);
+            typeProduct.getFamilyProduct().add(familyProduct);
             entityManager.persist(familyProduct);
 
         } catch (ConstraintViolationException constraintViolationException) {

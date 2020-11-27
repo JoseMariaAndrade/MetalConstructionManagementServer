@@ -13,16 +13,16 @@ public class TypeProduct implements Serializable {
 
     @Id
     public String description;
-    @OneToMany(mappedBy = "typeProduct")
-    private List<Product> products;
+    @OneToMany(mappedBy = "type")
+    public List<FamilyProduct> familyProduct;
 
     public TypeProduct() {
-        this.products = new ArrayList<>();
+        this.familyProduct = new ArrayList<>();
     }
 
     public TypeProduct(String description) {
         this.description = description;
-        this.products = new ArrayList<>();
+        this.familyProduct = new ArrayList<>();
     }
 
     public String getDescription() {
@@ -33,11 +33,11 @@ public class TypeProduct implements Serializable {
         this.description = description;
     }
 
-    public List<Product> getProducts() {
-        return products;
+    public List<FamilyProduct> getFamilyProduct() {
+        return familyProduct;
     }
 
-    public void setProducts(List<Product> products) {
-        this.products = products;
+    public void setFamilyProduct(List<FamilyProduct> familyProduct) {
+        this.familyProduct = familyProduct;
     }
 }
