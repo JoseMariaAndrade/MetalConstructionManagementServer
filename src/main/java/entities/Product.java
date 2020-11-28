@@ -4,6 +4,7 @@ import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 @Entity
@@ -26,10 +27,14 @@ public class Product implements Serializable {
     @ManyToOne
     @JoinColumn(name = "MANUFACTURER_NAME")
     private Manufacturer manufacturer;
-
+    @OneToMany(mappedBy = "produto", cascade = CascadeType.REMOVE)
+    private List<Variante> variantes;
+    @Version
+    private int version;
 
     public Product() {
         this.structures = new ArrayList<>();
+        this.variantes = new LinkedList<>();
     }
 
     public Product(String name, @NotNull FamilyProduct familyProduct, @NotNull Manufacturer manufacturer) {
@@ -37,6 +42,7 @@ public class Product implements Serializable {
         this.familyProduct = familyProduct;
         this.manufacturer = manufacturer;
         this.structures = new ArrayList<>();
+        this.variantes = new LinkedList<>();
     }
 
     public String getName() {
@@ -69,5 +75,29 @@ public class Product implements Serializable {
 
     public void setManufacturer(Manufacturer manufacturer) {
         this.manufacturer = manufacturer;
+    }
+
+    public List<Variante> getVariantes() {
+        return variantes;
+    }
+
+    public void setVariantes(List<Variante> especimen) {
+        this.variantes = especimen;
+    }
+
+    public void addVariante(Variante s) {
+        variantes.add(s);
+    }
+
+    public void removeVariante(Variante s) {
+        variantes.remove(s);
+    }
+
+    public int getVersion() {
+        return version;
+    }
+
+    public void setVersion(int version) {
+        this.version = version;
     }
 }
