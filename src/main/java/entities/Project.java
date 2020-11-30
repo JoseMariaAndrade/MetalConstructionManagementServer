@@ -6,6 +6,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+
 @Entity
 @Table(name = "PROJECTS")
 @NamedQueries({
@@ -19,7 +20,6 @@ public class Project implements Serializable {
     @Id
     @NotNull
     private String name;
-    //public List<File> files;
     @OneToMany(mappedBy = "project", cascade = CascadeType.REMOVE)
     public List<Structure> structures;
     @ManyToOne(cascade = CascadeType.REMOVE)
@@ -30,12 +30,15 @@ public class Project implements Serializable {
     @JoinColumn(name = "PROJECT_DESIGNER_NAME")
     @NotNull
     private Designer designer;
-    private String approve;
+    private Boolean decision;
+    private String observation;
+    @OneToMany(mappedBy = "project")
+    private List<Document> documents;
     @Version
     private int version;
 
     public Project() {
-//        this.files = new ArrayList<>();
+        this.documents = new ArrayList<>();
         this.structures = new ArrayList<>();
     }
 
@@ -43,9 +46,10 @@ public class Project implements Serializable {
         this.name = name;
         this.client = client;
         this.designer = designer;
-        this.approve = null;
-//        this.files = new ArrayList<>();
-//        this.structures = new ArrayList<>();
+        this.decision = null;
+        this.observation = null;
+        this.documents = new ArrayList<>();
+        this.structures = new ArrayList<>();
     }
 
 //    public Long getId() {
@@ -80,14 +84,6 @@ public class Project implements Serializable {
         this.designer = designer;
     }
 
-    //    public List<File> getFiles() {
-//        return files;
-//    }
-//
-//    public void setFiles(List<File> files) {
-//        this.files = files;
-//    }
-
     public List<Structure> getStructures() {
         return structures;
     }
@@ -96,12 +92,28 @@ public class Project implements Serializable {
         this.structures = structures;
     }
 
-    public String getApprove() {
-        return approve;
+    public Boolean getDecision() {
+        return decision;
     }
 
-    public void setApprove(String approve) {
-        this.approve = approve;
+    public void setDecision(Boolean decision) {
+        this.decision = decision;
+    }
+
+    public String getObservation() {
+        return observation;
+    }
+
+    public void setObservation(String observation) {
+        this.observation = observation;
+    }
+
+    public List<Document> getDocuments() {
+        return documents;
+    }
+
+    public void setDocuments(List<Document> documents) {
+        this.documents = documents;
     }
 
     public int getVersion() {
@@ -110,5 +122,15 @@ public class Project implements Serializable {
 
     public void setVersion(int version) {
         this.version = version;
+    }
+
+    @Override
+    public int hashCode() {
+        return super.hashCode();
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        return super.equals(obj);
     }
 }

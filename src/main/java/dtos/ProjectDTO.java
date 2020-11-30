@@ -1,7 +1,5 @@
 package dtos;
 
-import entities.Structure;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,9 +10,22 @@ public class ProjectDTO {
     private String nameClient;
     private Long idDesigner;
     private String nameDesigner;
-    private List<Structure> structures;
+    private Boolean decision;
+    private String observation;
+    private List<StructureDTO> structures;
 
     public ProjectDTO() {
+        this.structures = new ArrayList<>();
+    }
+
+    public ProjectDTO(String name, Long idClient, String nameClient, Long idDesigner, String nameDesigner, Boolean decision, String observation) {
+        this.name = name;
+        this.idClient = idClient;
+        this.nameClient = nameClient;
+        this.idDesigner = idDesigner;
+        this.nameDesigner = nameDesigner;
+        this.decision = decision;
+        this.observation = observation;
         this.structures = new ArrayList<>();
     }
 
@@ -67,11 +78,27 @@ public class ProjectDTO {
         this.nameDesigner = nameDesigner;
     }
 
-    public List<Structure> getStructures() {
+    public Boolean getDecision() {
+        return decision;
+    }
+
+    public void setDecision(Boolean decision) {
+        this.decision = decision;
+    }
+
+    public String getObservation() {
+        return observation;
+    }
+
+    public void setObservation(String observation) {
+        this.observation = observation;
+    }
+
+    public List<StructureDTO> getStructures() {
         return structures;
     }
 
-    public void setStructures(List<Structure> structures) {
+    public void setStructures(List<StructureDTO> structures) {
         this.structures = structures;
     }
 }

@@ -41,7 +41,7 @@ public class ProjectBean {
 
         try {
             project = new Project(name, client, designer);
-            client.getProjects().add(project);
+            client.addProject(project);
             designer.getProjects().add(project);
             entityManager.persist(project);
         } catch (ConstraintViolationException constraintViolationException){
@@ -96,5 +96,15 @@ public class ProjectBean {
         } catch (ConstraintViolationException constraintViolationException) {
             throw new MyConstraintViolationException(constraintViolationException);
         }
+    }
+
+    @Override
+    public int hashCode() {
+        return super.hashCode();
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        return super.equals(obj);
     }
 }

@@ -64,9 +64,9 @@ public class DocumentsService {
                         fileName;
                 writeFile(bytes, fileName);
                 documentBean.create(
-                        projectName,
                         path,
-                        fileName);
+                        fileName,
+                        projectName);
                 return Response.status(200).entity("Uploaded file name : " +
                         fileName).build();
             } catch (Exception e) {
