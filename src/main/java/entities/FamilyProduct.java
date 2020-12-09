@@ -13,6 +13,9 @@ public class FamilyProduct implements Serializable {
 
     @Id
     private String name;
+    @ManyToOne(cascade = CascadeType.REMOVE)
+    @JoinColumn(name = "FAMILY_TYPE_DESCRIPTION")
+    private TypeProduct type;
     @OneToMany(mappedBy = "familyProduct")
     private List<Product> products;
 
@@ -20,8 +23,9 @@ public class FamilyProduct implements Serializable {
         this.products = new ArrayList<>();
     }
 
-    public FamilyProduct(String name) {
+    public FamilyProduct(String name, TypeProduct typeProduct) {
         this.name = name;
+        this.type = typeProduct;
         this.products = new ArrayList<>();
     }
 
@@ -33,19 +37,19 @@ public class FamilyProduct implements Serializable {
         this.name = name;
     }
 
+    public TypeProduct getTypeProduct() {
+        return type;
+    }
+
+    public void setTypeProduct(TypeProduct typeProduct) {
+        this.type = typeProduct;
+    }
+
     public List<Product> getProducts() {
         return products;
     }
 
     public void setProducts(List<Product> products) {
         this.products = products;
-    }
-
-    public void addProduct(Product product) {
-        this.products.add(product);
-    }
-
-    public void removeProduct(Product product) {
-        this.products.remove(product);
     }
 }

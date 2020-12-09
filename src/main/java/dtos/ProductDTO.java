@@ -23,6 +23,11 @@ public class ProductDTO {
         this.family = family;
     }
 
+    public ProductDTO(String name, String family) {
+        this.name = name;
+        this.family = family;
+    }
+
     public String getName() {
         return name;
     }

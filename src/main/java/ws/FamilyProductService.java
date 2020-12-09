@@ -24,7 +24,8 @@ public class FamilyProductService {
 
     private FamilyProductDTO toDTO(FamilyProduct familyProduct) {
         return new FamilyProductDTO(
-                familyProduct.getName()
+                familyProduct.getName(),
+                familyProduct.getTypeProduct().description
         );
     }
 
@@ -41,10 +42,11 @@ public class FamilyProductService {
     @POST
     @Path("/")
     public Response create(FamilyProductDTO familyProductDTO)
-            throws MyEntityExistsException, MyConstraintViolationException {
+            throws MyEntityExistsException, MyEntityNotFoundException, MyConstraintViolationException {
 
         familyProductBean.create(
-                familyProductDTO.getName()
+                familyProductDTO.getName(),
+                familyProductDTO.getTypeProduct()
         );
 
         return Response.status(Response.Status.CREATED).build();

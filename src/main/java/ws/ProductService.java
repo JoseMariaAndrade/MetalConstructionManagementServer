@@ -26,7 +26,7 @@ public class ProductService {
     private ProductDTO toDTO(Product product) {
         return new ProductDTO(
                 product.getName(),
-                product.getTypeProduct().getDescription(),
+                product.getFamilyProduct().getTypeProduct().getDescription(),
                 product.getFamilyProduct().getName(),
                 product.getManufacturer().getId()
         );
@@ -44,14 +44,12 @@ public class ProductService {
 
     @GET
     @Path("{name}")
-    public Response getProductDetails(@PathParam("name") String name) {
+    public Response getProductDetails(@PathParam("name") String name)
+            throws MyEntityNotFoundException {
 
         Product product = productBean.findProduct(name);
 
-        if (product != null)
-            return Response.status(Response.Status.OK).entity(toDTO(product)).build();
-
-        return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("ERROR").build();
+        return Response.status(Response.Status.OK).entity(toDTO(product)).build();
     }
 
     @POST
@@ -61,7 +59,6 @@ public class ProductService {
 
         productBean.create(
                 productDTO.getName(),
-                productDTO.getType(),
                 productDTO.getFamily(),
                 productDTO.getManufacturer()
         );
@@ -75,7 +72,6 @@ public class ProductService {
 
         productBean.update(
                 productDTO.getName(),
-                productDTO.getType(),
                 productDTO.getFamily(),
                 productDTO.getManufacturer()
         );

@@ -73,4 +73,16 @@ public class ManufacturerBean {
 
         entityManager.remove(manufacturer);
     }
+
+    public void deleteProduct(Long id, String name)
+            throws MyEntityNotFoundException {
+
+        Manufacturer manufacturer = findManufacturer(id);
+
+        if (manufacturer == null)
+            throw new MyEntityNotFoundException("");
+
+        entityManager.lock(manufacturer, LockModeType.OPTIMISTIC);
+        manufacturer.getProducts().removeIf(p -> p.getName().equals(name));
+    }
 }

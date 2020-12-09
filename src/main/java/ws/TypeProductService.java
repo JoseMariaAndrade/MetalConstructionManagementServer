@@ -1,7 +1,9 @@
 package ws;
 
+import dtos.FamilyProductDTO;
 import dtos.TypeProductDTO;
 import ejbs.TypeProductBean;
+import entities.FamilyProduct;
 import entities.TypeProduct;
 import exceptions.MyConstraintViolationException;
 import exceptions.MyEntityExistsException;
@@ -23,8 +25,23 @@ public class TypeProductService {
     TypeProductBean typeProductBean;
 
     private TypeProductDTO toDTO(TypeProduct typeProduct) {
-        return new TypeProductDTO(
+        TypeProductDTO typeProductDTO = new TypeProductDTO(
                 typeProduct.getDescription()
+        );
+
+        List<FamilyProductDTO> familyProductDTOS = familiesToDTOs(typeProduct.getFamilyProduct());
+        typeProductDTO.setFamilies(familyProductDTOS);
+
+        return typeProductDTO;
+    }
+
+    private List<FamilyProductDTO> familiesToDTOs(List<FamilyProduct> familyProducts) {
+        return familyProducts.stream().map(this::toDTO).collect(Collectors.toList());
+    }
+
+    private FamilyProductDTO toDTO(FamilyProduct familyProduct) {
+        return new FamilyProductDTO(
+                familyProduct.getName()
         );
     }
 
