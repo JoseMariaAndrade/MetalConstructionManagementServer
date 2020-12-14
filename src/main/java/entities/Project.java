@@ -34,8 +34,8 @@ public class Project implements Serializable {
     private String observation;
     @OneToMany(mappedBy = "project")
     private List<Document> documents;
-    @Version
-    private int version;
+//    @Version
+//    private int version;
 
     public Project() {
         this.documents = new ArrayList<>();
@@ -116,13 +116,13 @@ public class Project implements Serializable {
         this.documents = documents;
     }
 
-    public int getVersion() {
-        return version;
-    }
-
-    public void setVersion(int version) {
-        this.version = version;
-    }
+//    public int getVersion() {
+//        return version;
+//    }
+//
+//    public void setVersion(int version) {
+//        this.version = version;
+//    }
 
     @Override
     public int hashCode() {

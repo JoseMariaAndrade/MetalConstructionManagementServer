@@ -6,11 +6,9 @@ import entities.Project;
 import exceptions.MyConstraintViolationException;
 import exceptions.MyEntityExistsException;
 import exceptions.MyEntityNotFoundException;
-import exceptions.MyIllegalArgumentException;
 
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
-import javax.persistence.LockModeType;
 import javax.persistence.PersistenceContext;
 import javax.validation.ConstraintViolationException;
 import java.util.List;
@@ -22,7 +20,7 @@ public class ProjectBean {
     EntityManager entityManager;
 
     public void create(String name, Long idClient, Long idDesigner)
-            throws MyEntityNotFoundException, MyEntityExistsException, MyConstraintViolationException, MyIllegalArgumentException {
+            throws MyEntityNotFoundException, MyEntityExistsException, MyConstraintViolationException {
 
         Project project = findProject(name);
         if (project != null) {
@@ -89,22 +87,12 @@ public class ProjectBean {
             throw new MyEntityNotFoundException("");
 
         try {
-            entityManager.lock(project, LockModeType.OPTIMISTIC);
+//            entityManager.lock(project, LockModeType.OPTIMISTIC);
             project.setName(name);
             project.setClient(client);
             project.setDesigner(designer);
         } catch (ConstraintViolationException constraintViolationException) {
             throw new MyConstraintViolationException(constraintViolationException);
         }
-    }
-
-    @Override
-    public int hashCode() {
-        return super.hashCode();
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        return super.equals(obj);
     }
 }

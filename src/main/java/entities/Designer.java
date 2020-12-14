@@ -6,6 +6,7 @@ import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,7 +14,7 @@ import java.util.List;
 @NamedQueries({
         @NamedQuery(name = "getAllDesigners", query = "SELECT d FROM Designer d ORDER BY d.name") //JPQL
 })
-public class Designer extends User {
+public class Designer extends User implements Serializable {
 
     @OneToMany(mappedBy = "designer")
     private List<Project> projects;

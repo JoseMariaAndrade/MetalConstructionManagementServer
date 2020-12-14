@@ -13,8 +13,10 @@ public class UserBean {
     @PersistenceContext
     EntityManager entityManager;
 
-    public User authenticate(final String email, final String password)
+    public User authenticate(String email, String password)
             throws Exception {
+
+        System.out.println("authenticate" + email);
         TypedQuery<User> query = entityManager.createNamedQuery("getUserByEmail", User.class)
                 .setParameter("email", email);
 

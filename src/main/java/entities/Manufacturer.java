@@ -3,6 +3,7 @@ package entities;
 import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -10,7 +11,7 @@ import java.util.List;
 @NamedQueries({
         @NamedQuery(name = "getAllManufacturers", query = "SELECT m FROM Manufacturer m ORDER BY m.name") //JPQL
 })
-public class Manufacturer extends User {
+public class Manufacturer extends User implements Serializable {
 
     @OneToMany(mappedBy = "manufacturer", cascade = CascadeType.REMOVE)
     private List<Product> products;

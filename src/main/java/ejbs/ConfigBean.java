@@ -14,8 +14,10 @@ import java.util.logging.Logger;
 @Startup
 public class ConfigBean {
 
-    private static final Logger LOGGER = Logger.getLogger("ebjs.ConfigBean");
+    private static final Logger LOGGER = Logger.getLogger("ejbs.ConfigBean");
 
+    @EJB
+    AdministratorBean administratorBean;
     @EJB
     ProjectBean projectBean;
     @EJB
@@ -41,24 +43,25 @@ public class ConfigBean {
     void populateDB() {
 
         try {
-//            clientBean.create("Jose", "123", "jose@mail.pt", "123456", "asdasfgafdg");
-//            designerBean.create("Joao", "123", "joao@mail.pt");
+            clientBean.create("Jose", "123", "jose@mail.pt", "123456", "asdasfgafdg");
+            designerBean.create("Joao", "123", "joao@mail.pt");
             manufacturerBean.create("XXX", "123", "zxcx@asd.com");
-//            projectBean.create("JoseProjeto", 1L, 2L);
-//            structureBean.create("ASDasd", "JoseProjeto");
+            administratorBean.create("JoseMaria", "123123", "j@mail.com");
+            projectBean.create("JoseProjeto", 1L, 2L);
+            structureBean.create("ASDasd", "JoseProjeto");
             typeProductBean.create("Perfis Enformados a Frio");
-//            typeProductBean.create("Chapa Perfilada");
-//            typeProductBean.create("Laje Mista");
-//            typeProductBean.create("Painel Sandwich");
+            typeProductBean.create("Chapa Perfilada");
+            typeProductBean.create("Laje Mista");
+            typeProductBean.create("Painel Sandwich");
             familyProductBean.create("Superomega", "Perfis Enformados a Frio");
             familyProductBean.create("Madre C", "Perfis Enformados a Frio");
             familyProductBean.create("Madre Z", "Perfis Enformados a Frio");
 //            familyProductBean.create("P0-272-30", "Chapa Perfilada");
-            productBean.create("Product", "Superomega", 1L);
+            productBean.create("Product", "Superomega", 3L);
 //            structureBean.productOnStru("Product", "ASDasd");
             System.out.println("####### A criar produtos...");
-            productBean.create("Section C 220 BF", "Madre C", 1L);
-            productBean.create("Section Z 220 BF", "Madre Z", 1L);
+            productBean.create("Section C 220 BF", "Madre C", 3L);
+            productBean.create("Section Z 220 BF", "Madre Z", 3L);
             System.out.println("####### A criar variantes...");
 
             //PODE LER-SE OS VALORES DOS PRODUTOS/VARIANTES DE EXCELS OU CSVs (ver excels fornecidos)
