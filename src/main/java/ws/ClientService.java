@@ -88,11 +88,28 @@ public class ClientService {
         );
     }
 
-    private List<StructureDTO> structuresToDTOS(List<Structure> structures) {
-        return structures.stream().map(this::toDTONoStructures).collect(Collectors.toList());
+    private ProjectDTO toDTO(Project project) {
+        ProjectDTO projectDTO = new ProjectDTO(
+                project.getName(),
+                project.getClient().getId(),
+                project.getClient().getName(),
+                project.getDesigner().getId(),
+                project.getDesigner().getName(),
+                project.getDecision(),
+                project.getObservation()
+        );
+
+        List<StructureDTO> structureDTOS = structuresToDTOS(project.getStructures());
+        projectDTO.setStructures(structureDTOS);
+
+        return projectDTO;
     }
 
-    private StructureDTO toDTONoStructures(Structure structure) {
+    private List<StructureDTO> structuresToDTOS(List<Structure> structures) {
+        return structures.stream().map(this::toDTO).collect(Collectors.toList());
+    }
+
+    private StructureDTO toDTO(Structure structure) {
         return new StructureDTO(
                 structure.getName(),
                 structure.getProject().getName()
@@ -126,7 +143,7 @@ public class ClientService {
     public Response create(@PathParam("id") Long id, @PathParam("nameProject") String nameProject, ProjectDTO projectDTO)
             throws MyEntityNotFoundException, MyIllegalArgumentException, MyConstraintViolationException {
 
-        clientBean.clientDecicion(id, nameProject, projectDTO.getDecision(), projectDTO.getObservation());
+        clientBean.clientDecision(id, nameProject, projectDTO.getDecision(), projectDTO.getObservation());
 
         return Response.status(Response.Status.OK).build();
     }
@@ -163,7 +180,7 @@ public class ClientService {
 
         for (Project project1 : projects) {
             if (project1.getName().equals(project.getName())) {
-                return Response.status(Response.Status.OK).entity(toDTONoStructures(project1)).build();
+                return Response.status(Response.Status.OK).entity(toDTO(project1)).build();
             }
         }
 

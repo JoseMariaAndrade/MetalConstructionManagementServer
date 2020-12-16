@@ -56,9 +56,9 @@ public class ConfigBean {
             familyProductBean.create("Superomega", "Perfis Enformados a Frio");
             familyProductBean.create("Madre C", "Perfis Enformados a Frio");
             familyProductBean.create("Madre Z", "Perfis Enformados a Frio");
-//            familyProductBean.create("P0-272-30", "Chapa Perfilada");
+            familyProductBean.create("P0-272-30", "Chapa Perfilada");
             productBean.create("Product", "Superomega", 3L);
-//            structureBean.productOnStru("Product", "ASDasd");
+            structureBean.productOnStru("Product", "ASDasd");
             System.out.println("####### A criar produtos...");
             productBean.create("Section C 220 BF", "Madre C", 3L);
             productBean.create("Section Z 220 BF", "Madre Z", 3L);

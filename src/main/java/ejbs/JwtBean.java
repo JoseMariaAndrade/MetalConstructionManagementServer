@@ -52,7 +52,7 @@ public class JwtBean {
         PRIVATE_KEY = privateKey;
     }
 
-    public String createJwt(final String subject, final String[] roles)
+    public String createJwt(final String subject, final Long subjectID, final String[] roles)
             throws Exception {
         JWSSigner signer = new RSASSASigner(PRIVATE_KEY);
         JsonArrayBuilder rolesBuilder = Json.createArrayBuilder();
@@ -62,6 +62,7 @@ public class JwtBean {
 
         JsonObjectBuilder claimsBuilder = Json.createObjectBuilder()
                 .add("sub", subject)
+                .add("subID", subjectID)
                 .add("iss", ISSUER)
                 .add("aud", AUDIENCE)
                 .add(CLAIM_ROLES, rolesBuilder.build())

@@ -1,5 +1,6 @@
 package ejbs;
 
+import entities.Product;
 import entities.Project;
 import entities.Structure;
 import exceptions.MyConstraintViolationException;
@@ -47,7 +48,7 @@ public class StructureBean {
         return entityManager.find(Structure.class, name);
     }
 
-    /*public void productOnStru(String product, String stru) throws MyEntityNotFoundException{
+    public void productOnStru(String product, String stru) throws MyEntityNotFoundException {
         Structure structure = findStructure(stru);
 
         if (structure == null)
@@ -57,5 +58,5 @@ public class StructureBean {
 
         structure.getProducts().add(product1);
         product1.getStructures().add(structure);
-    }*/
+    }
 }

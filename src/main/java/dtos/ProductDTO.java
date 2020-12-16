@@ -5,6 +5,7 @@ public class ProductDTO {
     private String name;
     private String type;
     private String family;
+    private Boolean needStock;
     private Long manufacturer;
 
     public ProductDTO() {
@@ -19,6 +20,13 @@ public class ProductDTO {
 
     public ProductDTO(String name, String type, String family) {
         this.name = name;
+        this.type = type;
+        this.family = family;
+    }
+
+    public ProductDTO(String name, Boolean needStock, String type, String family) {
+        this.name = name;
+        this.needStock = needStock;
         this.type = type;
         this.family = family;
     }
@@ -50,6 +58,14 @@ public class ProductDTO {
 
     public void setFamily(String family) {
         this.family = family;
+    }
+
+    public Boolean getNeedStock() {
+        return needStock;
+    }
+
+    public void setNeedStock(Boolean needStock) {
+        this.needStock = needStock;
     }
 
     public Long getManufacturer() {

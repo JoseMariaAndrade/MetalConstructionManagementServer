@@ -6,6 +6,8 @@ import ejbs.ManufacturerBean;
 import ejbs.ProductBean;
 import entities.Manufacturer;
 import entities.Product;
+import entities.Project;
+import entities.Structure;
 import exceptions.MyConstraintViolationException;
 import exceptions.MyEntityExistsException;
 import exceptions.MyEntityNotFoundException;
@@ -15,6 +17,7 @@ import javax.ejb.EJB;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -59,6 +62,15 @@ public class ManufacturerService {
     private ProductDTO toDTO(Product product) {
         return new ProductDTO(
                 product.getName(),
+                product.getFamilyProduct().getTypeProduct().getDescription(),
+                product.getFamilyProduct().getName()
+        );
+    }
+
+    private ProductDTO toDTOStock(Product product, Boolean needStock) {
+        return new ProductDTO(
+                product.getName(),
+                needStock,
                 product.getFamilyProduct().getTypeProduct().getDescription(),
                 product.getFamilyProduct().getName()
         );
@@ -129,14 +141,32 @@ public class ManufacturerService {
 
         Manufacturer manufacturer = manufacturerBean.findManufacturer(id);
 
-        System.out.println(name);
         Product product = productBean.findProduct(name);
+
+        List<Project> projects = manufacturerBean.getAllProjectsApprovedNotDone();
+        List<String> products = new ArrayList<>();
+        for (Project p : projects) {
+            for (Structure s : p.getStructures()) {
+                for (Product p2 : s.getProducts()) {
+                    if (p2.getName().equals(product.getName()))
+                        products.add(p2.getName());
+                    System.out.println(p2 + " com Projecto aprovado");
+                }
+            }
+        }
 
         for (Product p : manufacturer.getProducts()
         ) {
-            if (p.getName().equals(product.getName()))
-                return Response.status(Response.Status.OK).entity(toDTO(p)).build();
+//            for (Product p1: products
+//                 ) {
+            if (p.getName().equals(product.getName()) && products.contains(product.getName())) {
+                return Response.status(Response.Status.OK).entity(toDTOStock(p, true)).build();
+            } else {
+                return Response.status(Response.Status.OK).entity(toDTOStock(p, false)).build();
+            }
         }
+
+//        }
 
 
         return Response.status(Response.Status.NOT_FOUND).build();

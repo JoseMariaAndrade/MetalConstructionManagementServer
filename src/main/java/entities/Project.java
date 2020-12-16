@@ -10,7 +10,8 @@ import java.util.List;
 @Entity
 @Table(name = "PROJECTS")
 @NamedQueries({
-        @NamedQuery(name = "getAllProjects", query = "SELECT p FROM Project p ORDER BY p.name") //JPQL
+        @NamedQuery(name = "getAllProjects", query = "SELECT p FROM Project p ORDER BY p.name"), //JPQL
+        @NamedQuery(name = "getAllProjectsApprovedAndNotDone", query = "SELECT p FROM Project p WHERE p.decision=TRUE AND p.feito=FALSE")
 })
 public class Project implements Serializable {
 
@@ -31,11 +32,12 @@ public class Project implements Serializable {
     @NotNull
     private Designer designer;
     private Boolean decision;
+    private Boolean feito;
     private String observation;
     @OneToMany(mappedBy = "project")
     private List<Document> documents;
-//    @Version
-//    private int version;
+    @Version
+    private int version;
 
     public Project() {
         this.documents = new ArrayList<>();
@@ -47,6 +49,7 @@ public class Project implements Serializable {
         this.client = client;
         this.designer = designer;
         this.decision = null;
+        this.feito = false;
         this.observation = null;
         this.documents = new ArrayList<>();
         this.structures = new ArrayList<>();
@@ -100,6 +103,14 @@ public class Project implements Serializable {
         this.decision = decision;
     }
 
+    public Boolean getFeito() {
+        return feito;
+    }
+
+    public void setFeito(Boolean feito) {
+        this.feito = feito;
+    }
+
     public String getObservation() {
         return observation;
     }
@@ -116,13 +127,13 @@ public class Project implements Serializable {
         this.documents = documents;
     }
 
-//    public int getVersion() {
-//        return version;
-//    }
-//
-//    public void setVersion(int version) {
-//        this.version = version;
-//    }
+    public int getVersion() {
+        return version;
+    }
+
+    public void setVersion(int version) {
+        this.version = version;
+    }
 
     @Override
     public int hashCode() {

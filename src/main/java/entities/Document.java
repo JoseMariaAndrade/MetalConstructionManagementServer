@@ -1,11 +1,10 @@
 package entities;
 
 import javax.persistence.*;
-import java.io.Serializable;
 
 @Entity
 @NamedQuery(name = "getProjectDocuments", query = "SELECT doc FROM Document doc WHERE doc.project.name = :projectName")
-public class Document implements Serializable {
+public class Document {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

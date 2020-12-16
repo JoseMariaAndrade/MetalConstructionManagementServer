@@ -80,7 +80,7 @@ public class ClientBean {
         entityManager.remove(client);
     }
 
-    public void clientDecicion(Long id, String nameProject, Boolean decision, String observation)
+    public void clientDecision(Long id, String nameProject, Boolean decision, String observation)
             throws MyEntityNotFoundException, MyIllegalArgumentException, MyConstraintViolationException {
 
         Client client = findClient(id);
@@ -106,7 +106,6 @@ public class ClientBean {
         }
 
         try {
-
             entityManager.lock(project, LockModeType.OPTIMISTIC);
             project.setDecision(decision);
             project.setObservation(observation);

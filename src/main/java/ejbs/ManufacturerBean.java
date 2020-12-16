@@ -1,6 +1,7 @@
 package ejbs;
 
 import entities.Manufacturer;
+import entities.Project;
 import exceptions.MyConstraintViolationException;
 import exceptions.MyEntityExistsException;
 import exceptions.MyEntityNotFoundException;
@@ -38,6 +39,10 @@ public class ManufacturerBean {
 
     public List<Manufacturer> getAll() {
         return entityManager.createNamedQuery("getAllManufacturers").getResultList();
+    }
+
+    public List<Project> getAllProjectsApprovedNotDone() {
+        return entityManager.createNamedQuery("getAllProjectsApprovedAndNotDone").getResultList();
     }
 
     public Manufacturer findManufacturer(Long id) {

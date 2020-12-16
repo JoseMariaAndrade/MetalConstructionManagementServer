@@ -22,15 +22,18 @@ public class DocumentBean {
 
         Project project = em.find(Project.class, projectName);
 
-        if (project == null)
-
-            try {
-                Document document = new Document(filepath, filename, project);
-                em.persist(document);
-            } catch (ConstraintViolationException e) {
-                throw new MyConstraintViolationException(e);
+        if (project == null) {
+            throw new MyEntityNotFoundException(String.format("The Project %s not found.", projectName));
         }
 
+        try {
+            Document document = new Document(filepath, filename, project);
+            em.persist(document);
+
+            project.getDocuments().add(document);
+        } catch (ConstraintViolationException constraintViolationException) {
+            throw new MyConstraintViolationException(constraintViolationException);
+        }
     }
 
     public Document findDocument(int id) throws MyEntityNotFoundException {
