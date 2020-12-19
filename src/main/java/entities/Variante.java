@@ -5,6 +5,10 @@ import javax.validation.constraints.NotNull;
 import java.util.LinkedHashMap;
 
 @Entity
+@Table(name = "VARIANTES")
+@NamedQueries({
+        @NamedQuery(name = "getAllVariants", query = "SELECT v FROM Variante v ORDER BY v.nome")
+})
 public class Variante {
 
     private static double G = 78.5;
@@ -19,6 +23,9 @@ public class Variante {
 
     @NotNull
     private String nome;
+
+    @NotNull
+    private String displayName;
 
     private double weff_p;
     private double weff_n;
@@ -40,6 +47,7 @@ public class Variante {
         this.codigo = codigo;
         this.produto = produto;
         this.nome = nome;
+        this.displayName = produto.getName()+" - "+nome;
         this.weff_p = weff_p;
         this.weff_n = weff_n;
         this.ar = ar;
@@ -47,6 +55,14 @@ public class Variante {
         this.pp = G * ar * Math.pow(10, -6);
         this.mcr_p = new LinkedHashMap<Double, Double>();
         this.mcr_n = new LinkedHashMap<Double, Double>();
+    }
+
+    public String getDisplayName() {
+        return displayName;
+    }
+
+    public void setDisplayName(String displayName) {
+        this.displayName = displayName;
     }
 
     public int getCodigo() {

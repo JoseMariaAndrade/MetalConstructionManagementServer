@@ -6,6 +6,7 @@ import entities.Variante;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import java.util.List;
 
 @Stateless
 public class VarianteBean {
@@ -21,6 +22,12 @@ public class VarianteBean {
 
     }
 
+    public List<Variante> getAll() {
+        return em.createNamedQuery("getAllVariants").getResultList();
+    }
+
+    public Variante findVariante(int codigo) {
+        return em.find(Variante.class, codigo);
     public Variante getVariante(int codigo) {
         return entityManager.find(Variante.class, codigo);
     }

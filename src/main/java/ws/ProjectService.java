@@ -1,8 +1,12 @@
 package ws;
 
+import dtos.ProductDTO;
 import dtos.ProjectDTO;
+import dtos.StructureDTO;
 import ejbs.ProjectBean;
+import entities.Product;
 import entities.Project;
+import entities.Structure;
 import exceptions.MyConstraintViolationException;
 import exceptions.MyEntityExistsException;
 import exceptions.MyEntityNotFoundException;

@@ -3,6 +3,8 @@ package ejbs;
 import entities.Variante;
 
 import javax.ejb.Stateless;
+import java.util.ArrayList;
+import java.util.List;
 
 @Stateless
 public class SimulacaoBean {
@@ -10,9 +12,11 @@ public class SimulacaoBean {
     private static double EE = 210000000.0;
     private static double alfaLT = 0.21;
 
+    public String simulaVariante(int nb, double LVao, int q, Variante variante) {
 
-    public boolean simulaVariante(int nb, double LVao, int q, Variante variante) {
-        boolean seguro = true;
+        //boolean seguro = true;
+        String resultadoSimulacao = "";
+        boolean isSafe = true;
 
         double[] msd = momentosFletoresAtuantes(nb, LVao, q, variante);
 
@@ -30,11 +34,45 @@ public class SimulacaoBean {
                 rs = Math.abs(msd[i]) / Math.abs(mrd_n);
             }
             if (rs >= 1) {
-                System.out.println("Não verifica segurança na secção " + i + " da variante " + variante.getNome() + " do produto " + variante.getProduto().getName());
-                seguro = false;
+                isSafe = false;
+                resultadoSimulacao+="Não verifica segurança na secção " + i + " da variante " + variante.getNome() + " do produto " + variante.getProduto().getName() + System.lineSeparator() + System.lineSeparator();
             }
         }
-        return seguro;
+
+        if (isSafe == true) {
+            resultadoSimulacao = "seguro";
+        }
+
+        return resultadoSimulacao;
+    }
+
+    public Variante simulaVarianteGeraMateriais(int nb, double LVao, int q, Variante variante) {
+
+        boolean isSafe = true;
+        String resultadoSimulacao = "";
+
+        double[] msd = momentosFletoresAtuantes(nb, LVao, q, variante);
+
+        double lambda1 = Math.PI * Math.sqrt(EE / variante.getSigmaC());
+
+
+        double mrd_p = momentoResistenteProduto(lambda1, variante.getWeff_p(), variante.getMcr_p().get(LVao));
+        double mrd_n = momentoResistenteProduto(lambda1, variante.getWeff_n(), variante.getMcr_n().get(LVao));
+
+        for (int i = 0; i < msd.length; i++) {
+            double rs;
+            if (msd[i] >= 0) {
+                rs = Math.abs(msd[i]) / Math.abs(mrd_p);
+            } else {
+                rs = Math.abs(msd[i]) / Math.abs(mrd_n);
+            }
+            if (rs >= 1) {
+                isSafe = false;
+                return null;
+            }
+        }
+
+        return variante;
     }
 
 

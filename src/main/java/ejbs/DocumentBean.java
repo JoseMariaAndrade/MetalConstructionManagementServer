@@ -32,7 +32,7 @@ public class DocumentBean {
 
             project.getDocuments().add(document);
         } catch (ConstraintViolationException constraintViolationException) {
-            throw new MyConstraintViolationException(constraintViolationException);
+            throw  new MyConstraintViolationException(constraintViolationException);
         }
     }
 
