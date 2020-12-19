@@ -1,5 +1,8 @@
 package dtos;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class ProductDTO {
 
     private String name;
@@ -8,6 +11,7 @@ public class ProductDTO {
     private Boolean needStock;
     private Long manufacturer;
     private String manufacturerName;
+    private List<VariantesDTO> variantes;
 
     public ProductDTO() {
     }
@@ -42,6 +46,7 @@ public class ProductDTO {
         this.type = type;
         this.family = family;
         this.manufacturerName = manufacturerName;
+        this.variantes = new ArrayList<>();
     }
 
     public String getName() {
@@ -90,5 +95,13 @@ public class ProductDTO {
 
     public void setManufacturerName(String manufacturerName) {
         this.manufacturerName = manufacturerName;
+    }
+
+    public List<VariantesDTO> getVariantes() {
+        return variantes;
+    }
+
+    public void setVariantes(List<VariantesDTO> variantes) {
+        this.variantes = variantes;
     }
 }
