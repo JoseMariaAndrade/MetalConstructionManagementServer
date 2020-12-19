@@ -47,7 +47,7 @@ public class LoginService {
             log.info(exception.getMessage());
         }
 
-        return Response.status(Response.Status.ACCEPTED).build();
+        return Response.status(Response.Status.UNAUTHORIZED).build();
     }
 
     @GET

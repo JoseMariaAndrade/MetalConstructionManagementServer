@@ -9,6 +9,7 @@ import exceptions.MyEntityNotFoundException;
 
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
+import javax.persistence.LockModeType;
 import javax.persistence.PersistenceContext;
 import javax.validation.ConstraintViolationException;
 import java.util.List;
@@ -64,7 +65,8 @@ public class ProjectBean {
         if (project == null) {
             throw new MyEntityNotFoundException("ERROR");
         }
-
+        project.getClient().getProjects().remove(project);
+        project.getDesigner().getProjects().remove(project);
         entityManager.remove(project);
     }
 
@@ -91,6 +93,26 @@ public class ProjectBean {
             project.setName(name);
             project.setClient(client);
             project.setDesigner(designer);
+        } catch (ConstraintViolationException constraintViolationException) {
+            throw new MyConstraintViolationException(constraintViolationException);
+        }
+    }
+
+    public void availableToClient(String name) throws MyEntityNotFoundException, MyConstraintViolationException {
+        Project project = findProject(name);
+        if (project == null)
+            throw new MyEntityNotFoundException("");
+
+        try {
+            entityManager.lock(project, LockModeType.OPTIMISTIC);
+            project.setAvailableToClient(true);
+            for (Project proj : project.getClient().getProjects()
+            ) {
+                if (proj.getName().equals(project.getName())) {
+                    entityManager.lock(proj, LockModeType.OPTIMISTIC);
+                    proj.setAvailableToClient(true);
+                }
+            }
         } catch (ConstraintViolationException constraintViolationException) {
             throw new MyConstraintViolationException(constraintViolationException);
         }

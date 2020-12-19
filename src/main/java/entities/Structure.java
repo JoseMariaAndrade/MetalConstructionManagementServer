@@ -9,7 +9,8 @@ import java.util.List;
 @Entity
 @Table(name = "STRUCTURES")
 @NamedQueries({
-        @NamedQuery(name = "getAllStructures", query = "SELECT s FROM Structure s ORDER BY s.name")
+        @NamedQuery(name = "getAllStructures", query = "SELECT s FROM Structure s ORDER BY s.name"),
+        @NamedQuery(name = "getAllStructuresOfProjectApprovedAndNotDone", query = "SELECT s FROM Structure s WHERE s.decision=TRUE AND s.feito=FALSE")
 })
 public class Structure implements Serializable {
 
@@ -22,15 +23,22 @@ public class Structure implements Serializable {
     @ManyToMany(mappedBy = "structures", cascade = CascadeType.REMOVE)
     @NotNull
     private List<Product> products;
+    private Boolean decision;
+    private Boolean feito;
+    private String observation;
 
     public Structure() {
         this.products = new ArrayList<>();
+        this.feito = false;
     }
 
     public Structure(String name, @NotNull Project project) {
         this.name = name;
         this.project = project;
         this.products = new ArrayList<>();
+        this.decision = null;
+        this.feito = false;
+        this.observation = null;
     }
 
     public String getName() {
@@ -55,5 +63,29 @@ public class Structure implements Serializable {
 
     public void setProducts(List<Product> products) {
         this.products = products;
+    }
+
+    public Boolean getDecision() {
+        return decision;
+    }
+
+    public void setDecision(Boolean decision) {
+        this.decision = decision;
+    }
+
+    public Boolean getFeito() {
+        return feito;
+    }
+
+    public void setFeito(Boolean feito) {
+        this.feito = feito;
+    }
+
+    public String getObservation() {
+        return observation;
+    }
+
+    public void setObservation(String observation) {
+        this.observation = observation;
     }
 }

@@ -3,6 +3,8 @@ package ws;
 import dtos.DesignerDTO;
 import dtos.ProjectDTO;
 import ejbs.DesignerBean;
+import ejbs.EmailBean;
+import ejbs.ProjectBean;
 import entities.Designer;
 import entities.Project;
 import exceptions.MyConstraintViolationException;
@@ -11,6 +13,7 @@ import exceptions.MyEntityNotFoundException;
 import exceptions.MyIllegalArgumentException;
 
 import javax.ejb.EJB;
+import javax.mail.MessagingException;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -24,6 +27,12 @@ public class DesignerService {
 
     @EJB
     private DesignerBean designerBean;
+
+    @EJB
+    private ProjectBean projectBean;
+
+    @EJB
+    private EmailBean emailBean;
 
     private DesignerDTO toDTONoProjects(Designer designer) {
         return new DesignerDTO(
@@ -58,7 +67,8 @@ public class DesignerService {
                 project.getClient().getId(),
                 project.getClient().getName(),
                 project.getDesigner().getId(),
-                project.getDesigner().getName()
+                project.getDesigner().getName(),
+                project.getAvailableToClient()
 
         );
     }
@@ -121,5 +131,28 @@ public class DesignerService {
         designerBean.delete(id);
 
         return Response.status(Response.Status.ACCEPTED).build();
+    }
+
+    @GET
+    @Path("/{id}/project/{name}/availableToClient")
+    public Response sendEmail(@PathParam("id") Long id, @PathParam("name") String name)
+            throws MyEntityNotFoundException, MessagingException, MyConstraintViolationException {
+
+        Designer designer = designerBean.findDesigner(id);
+
+        if (designer == null)
+            throw new MyEntityNotFoundException("");
+
+
+        projectBean.availableToClient(name);
+
+        Project project = projectBean.findProject(name);
+        if (project == null)
+            throw new MyEntityNotFoundException("");
+
+        String string = name +
+                " - Available";
+        emailBean.send(project.getClient().getEmail(), string, "Project Available");
+        return Response.status(Response.Status.OK).entity("Email sent").build();
     }
 }

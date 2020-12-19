@@ -31,6 +31,9 @@ public class Product implements Serializable {
     private List<Variante> variantes;
     @Version
     private int version;
+    private int height;
+    private double thickness;
+    private double weight;
 
     public Product() {
         this.structures = new ArrayList<>();
@@ -41,6 +44,17 @@ public class Product implements Serializable {
         this.name = name;
         this.familyProduct = familyProduct;
         this.manufacturer = manufacturer;
+        this.structures = new ArrayList<>();
+        this.variantes = new LinkedList<>();
+    }
+
+    public Product(String name, @NotNull FamilyProduct familyProduct, Manufacturer manufacturer, int height, double thickness, double weight) {
+        this.name = name;
+        this.familyProduct = familyProduct;
+        this.manufacturer = manufacturer;
+        this.height = height;
+        this.thickness = thickness;
+        this.weight = weight;
         this.structures = new ArrayList<>();
         this.variantes = new LinkedList<>();
     }
@@ -67,6 +81,30 @@ public class Product implements Serializable {
 
     public void setStructures(List<Structure> structures) {
         this.structures = structures;
+    }
+
+    public int getHeight() {
+        return height;
+    }
+
+    public void setHeight(int height) {
+        this.height = height;
+    }
+
+    public double getThickness() {
+        return thickness;
+    }
+
+    public void setThickness(double thickness) {
+        this.thickness = thickness;
+    }
+
+    public double getWeight() {
+        return weight;
+    }
+
+    public void setWeight(double weight) {
+        this.weight = weight;
     }
 
     public Manufacturer getManufacturer() {

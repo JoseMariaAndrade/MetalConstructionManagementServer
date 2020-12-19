@@ -47,8 +47,11 @@ public class ConfigBean {
             designerBean.create("Joao", "123", "joao@mail.pt");
             manufacturerBean.create("XXX", "123", "zxcx@asd.com");
             administratorBean.create("JoseMaria", "123123", "j@mail.com");
+            clientBean.create("Paulo", "123", "joses@mail.pt", "123456", "asdasfgafdg");
             projectBean.create("JoseProjeto", 1L, 2L);
+            projectBean.create("PauloProjeto", 5L, 2L);
             structureBean.create("ASDasd", "JoseProjeto");
+            structureBean.create("ASDasds", "PauloProjeto");
             typeProductBean.create("Perfis Enformados a Frio");
             typeProductBean.create("Chapa Perfilada");
             typeProductBean.create("Laje Mista");

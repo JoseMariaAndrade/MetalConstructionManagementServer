@@ -44,7 +44,7 @@ public class StructureBean {
         return entityManager.createNamedQuery("getAllStructures").getResultList();
     }
 
-    private Structure findStructure(String name) {
+    public Structure findStructure(String name) {
         return entityManager.find(Structure.class, name);
     }
 

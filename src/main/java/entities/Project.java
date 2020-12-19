@@ -10,8 +10,7 @@ import java.util.List;
 @Entity
 @Table(name = "PROJECTS")
 @NamedQueries({
-        @NamedQuery(name = "getAllProjects", query = "SELECT p FROM Project p ORDER BY p.name"), //JPQL
-        @NamedQuery(name = "getAllProjectsApprovedAndNotDone", query = "SELECT p FROM Project p WHERE p.decision=TRUE AND p.feito=FALSE")
+        @NamedQuery(name = "getAllProjects", query = "SELECT p FROM Project p ORDER BY p.name") //JPQL
 })
 public class Project implements Serializable {
 
@@ -21,23 +20,21 @@ public class Project implements Serializable {
     @Id
     @NotNull
     private String name;
-    @OneToMany(mappedBy = "project", cascade = CascadeType.REMOVE)
+    @OneToMany(mappedBy = "project", cascade = CascadeType.ALL)
     public List<Structure> structures;
-    @ManyToOne(cascade = CascadeType.REMOVE)
+    @ManyToOne(cascade = CascadeType.PERSIST)
     @JoinColumn(name = "PROJECT_CLIENT_NAME")
     @NotNull
     private Client client;
-    @ManyToOne(cascade = CascadeType.REMOVE)
+    @ManyToOne(cascade = CascadeType.PERSIST)
     @JoinColumn(name = "PROJECT_DESIGNER_NAME")
     @NotNull
     private Designer designer;
-    private Boolean decision;
-    private Boolean feito;
-    private String observation;
     @OneToMany(mappedBy = "project")
     private List<Document> documents;
     @Version
     private int version;
+    private Boolean availableToClient;
 
     public Project() {
         this.documents = new ArrayList<>();
@@ -48,11 +45,9 @@ public class Project implements Serializable {
         this.name = name;
         this.client = client;
         this.designer = designer;
-        this.decision = null;
-        this.feito = false;
-        this.observation = null;
         this.documents = new ArrayList<>();
         this.structures = new ArrayList<>();
+        this.availableToClient = false;
     }
 
 //    public Long getId() {
@@ -95,30 +90,6 @@ public class Project implements Serializable {
         this.structures = structures;
     }
 
-    public Boolean getDecision() {
-        return decision;
-    }
-
-    public void setDecision(Boolean decision) {
-        this.decision = decision;
-    }
-
-    public Boolean getFeito() {
-        return feito;
-    }
-
-    public void setFeito(Boolean feito) {
-        this.feito = feito;
-    }
-
-    public String getObservation() {
-        return observation;
-    }
-
-    public void setObservation(String observation) {
-        this.observation = observation;
-    }
-
     public List<Document> getDocuments() {
         return documents;
     }
@@ -133,6 +104,14 @@ public class Project implements Serializable {
 
     public void setVersion(int version) {
         this.version = version;
+    }
+
+    public Boolean getAvailableToClient() {
+        return availableToClient;
+    }
+
+    public void setAvailableToClient(Boolean availableToClient) {
+        this.availableToClient = availableToClient;
     }
 
     @Override

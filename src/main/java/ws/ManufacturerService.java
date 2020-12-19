@@ -6,7 +6,6 @@ import ejbs.ManufacturerBean;
 import ejbs.ProductBean;
 import entities.Manufacturer;
 import entities.Product;
-import entities.Project;
 import entities.Structure;
 import exceptions.MyConstraintViolationException;
 import exceptions.MyEntityExistsException;
@@ -143,15 +142,13 @@ public class ManufacturerService {
 
         Product product = productBean.findProduct(name);
 
-        List<Project> projects = manufacturerBean.getAllProjectsApprovedNotDone();
+        List<Structure> structures = manufacturerBean.getAllProjectsApprovedNotDone();
         List<String> products = new ArrayList<>();
-        for (Project p : projects) {
-            for (Structure s : p.getStructures()) {
-                for (Product p2 : s.getProducts()) {
-                    if (p2.getName().equals(product.getName()))
-                        products.add(p2.getName());
-                    System.out.println(p2 + " com Projecto aprovado");
-                }
+        for (Structure s : structures) {
+            for (Product p2 : s.getProducts()) {
+                if (p2.getName().equals(product.getName()))
+                    products.add(p2.getName());
+                System.out.println(p2 + " com Projecto aprovado");
             }
         }
 
@@ -173,7 +170,7 @@ public class ManufacturerService {
     }
 
     @POST
-    @Path("{id}")
+    @Path("{id}/product/create")
     public Response createProduct(@PathParam("id") Long id, ProductDTO productDTO)
             throws MyEntityNotFoundException, MyIllegalArgumentException, MyEntityExistsException, MyConstraintViolationException {
 

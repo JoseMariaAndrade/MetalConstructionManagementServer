@@ -2,6 +2,7 @@ package ejbs;
 
 import entities.Client;
 import entities.Project;
+import entities.Structure;
 import exceptions.MyConstraintViolationException;
 import exceptions.MyEntityExistsException;
 import exceptions.MyEntityNotFoundException;
@@ -80,7 +81,7 @@ public class ClientBean {
         entityManager.remove(client);
     }
 
-    public void clientDecision(Long id, String nameProject, Boolean decision, String observation)
+    public void clientDecision(Long id, String nameProject, String nameStructure, Boolean decision, String observation)
             throws MyEntityNotFoundException, MyIllegalArgumentException, MyConstraintViolationException {
 
         Client client = findClient(id);
@@ -94,21 +95,33 @@ public class ClientBean {
         if (project == null)
             throw new MyEntityNotFoundException();
 
+        Structure structure = entityManager.find(Structure.class, nameStructure);
+
+        if (structure == null)
+            throw new MyEntityNotFoundException();
+
         if (!client.getId().equals(project.getClient().getId()))
             throw new MyIllegalArgumentException();
 
-        for (Project project1 : client.getProjects()) {
-            if (project1.getName().equals(project.getName())) {
+        for (Structure structure1 : project.getStructures()
+        ) {
+            if (structure1.getName().equals(structure.getName())) {
                 entityManager.lock(client, LockModeType.OPTIMISTIC);
-                project1.setDecision(decision);
-                project1.setObservation(observation);
+                structure1.setDecision(decision);
+                structure1.setObservation(observation);
             }
         }
 
+//        for (Project project1 : client.getProjects()) {
+//            if (project1.getName().equals(project.getName())) {
+//
+//            }
+//        }
+
         try {
             entityManager.lock(project, LockModeType.OPTIMISTIC);
-            project.setDecision(decision);
-            project.setObservation(observation);
+            structure.setDecision(decision);
+            structure.setObservation(observation);
 
         } catch (ConstraintViolationException constraintViolationException) {
             throw new MyConstraintViolationException(constraintViolationException);
