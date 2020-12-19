@@ -2,6 +2,7 @@ package ws;
 
 import dtos.ManufacturerDTO;
 import dtos.ProductDTO;
+import dtos.VariantDTO;
 import dtos.VariantesDTO;
 import ejbs.ManufacturerBean;
 import ejbs.ProductBean;
@@ -17,6 +18,7 @@ import javax.ejb.EJB;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -66,6 +68,16 @@ public class ManufacturerService {
         );
     }
 
+    private ProductDTO toDTOVariantes(Product product, Boolean needStock) {
+        return new ProductDTO(
+                product.getName(),
+                needStock,
+                product.getFamilyProduct().getTypeProduct().getDescription(),
+                product.getFamilyProduct().getName()
+
+        );
+    }
+
     private ProductDTO toDTOStock(Product product, Boolean needStock) {
         return new ProductDTO(
                 product.getName(),
@@ -89,14 +101,42 @@ public class ManufacturerService {
         return productDTO;
     }
 
+    private ProductDTO toDTOStockVariantesComDados(Product product) {
+
+        List<VariantDTO> variantsDTOS = new ArrayList<>();
+        if (product.getVariantes().size() == 0) {
+            // do nothing
+        } else {
+            variantsDTOS = variantsToDTOs(product.getVariantes());
+        }
+        ProductDTO productDTO = new ProductDTO(
+                product.getName(),
+                product.getNeedStock(),
+                product.getFamilyProduct().getTypeProduct().getDescription(),
+                product.getFamilyProduct().getName(),
+                variantsDTOS
+        );
+
+        return productDTO;
+    }
+
     private List<VariantesDTO> variantesToDTOs(List<Variante> variantes) {
         return variantes.stream().map(this::toDTO).collect(Collectors.toList());
+    }
+
+    private List<VariantDTO> variantsToDTOs(List<Variante> variantes) {
+        return variantes.stream().map(this::toDTOComDados).collect(Collectors.toList());
     }
 
     private VariantesDTO toDTO(Variante variante) {
         return new VariantesDTO(
                 variante.getNome()
         );
+    }
+
+    private VariantDTO toDTOComDados(Variante variante) {
+        return new VariantDTO(variante.getCodigo(), variante.getProduto().getName(), variante.getNome(), variante.getWeff_p(), variante.getWeff_n(), variante.getAr(), variante.getSigmaC());
+
     }
 
     private List<ManufacturerDTO> toDTOsNoProducts(List<Manufacturer> manufacturers) {
@@ -171,6 +211,24 @@ public class ManufacturerService {
         }
 
         return Response.status(Response.Status.OK).entity(toDTOStockVariantes(product)).build();
+    }
+
+    @GET
+    @Path("{id}/product/{name}/variants")
+    public Response getDetailsProductVariants(@PathParam("id") Long id, @PathParam("name") String name)
+            throws MyEntityNotFoundException {
+
+        manufacturerBean.verifyStockProducts(id, name);
+
+        Product product = productBean.findProduct(name);
+
+        if (product == null) {
+            throw new MyEntityNotFoundException("Product not found");
+        }
+
+        ProductDTO productDTO = toDTOStockVariantesComDados(product);
+
+        return Response.status(Response.Status.OK).entity(productDTO).build();
     }
 
     @POST
