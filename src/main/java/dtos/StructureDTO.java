@@ -26,12 +26,20 @@ public class StructureDTO {
         this.products = new ArrayList<>();
     }
 
+    public StructureDTO(String name, Boolean decision, String observation) {
+        this.name = name;
+        this.decision = decision;
+        this.observation = observation;
+        this.products = new ArrayList<>();
+    }
+
     public StructureDTO(String name, String project, int nb, Double LVao, int q) {
         this.name = name;
         this.project = project;
         this.nb = nb;
         this.LVao = LVao;
         this.q = q;
+        this.products = new ArrayList<>();
     }
 
     public StructureDTO(String name, String project, List<ProductDTO> products, int nb, Double LVao, int q) {

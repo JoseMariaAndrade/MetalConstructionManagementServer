@@ -19,18 +19,17 @@ public class VarianteBean {
         Variante p = new Variante(codigo, produto, name, weff_p, weff_n, ar, sigmaC);
         produto.getVariantes().add(p);
         entityManager.persist(p);
-
     }
 
     public List<Variante> getAll() {
-        return em.createNamedQuery("getAllVariants").getResultList();
+        return entityManager.createNamedQuery("getAllVariants").getResultList();
     }
 
     public Variante findVariante(int codigo) {
-        return em.find(Variante.class, codigo);
-    public Variante getVariante(int codigo) {
         return entityManager.find(Variante.class, codigo);
     }
 
-
+    public Variante getVariante(int codigo) {
+        return entityManager.find(Variante.class, codigo);
+    }
 }

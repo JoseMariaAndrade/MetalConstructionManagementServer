@@ -3,18 +3,24 @@ package dtos;
 public class SimulationDTO {
 
     private int nb;
-    private Double lvao;
+    private Double LVao;
     private int q;
     private int variantCode;
 
     public SimulationDTO() {
     }
 
-    public SimulationDTO(int nb, Double lvao, int q, int variantCode) {
+    public SimulationDTO(int nb, Double LVao, int q, int variantCode) {
         this.nb = nb;
-        this.lvao = lvao;
+        this.LVao = LVao;
         this.q = q;
         this.variantCode = variantCode;
+    }
+
+    public SimulationDTO(int nb, Double LVao, int q) {
+        this.nb = nb;
+        this.LVao = LVao;
+        this.q = q;
     }
 
     public int getNb() {
@@ -25,12 +31,12 @@ public class SimulationDTO {
         this.nb = nb;
     }
 
-    public Double getLvao() {
-        return lvao;
+    public Double getLVao() {
+        return LVao;
     }
 
-    public void setLvao(Double lvao) {
-        this.lvao = lvao;
+    public void setLVao(Double LVao) {
+        this.LVao = LVao;
     }
 
     public int getQ() {

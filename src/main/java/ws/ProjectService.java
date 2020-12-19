@@ -1,10 +1,9 @@
 package ws;
 
-import dtos.ProductDTO;
 import dtos.ProjectDTO;
 import dtos.StructureDTO;
 import ejbs.ProjectBean;
-import entities.Product;
+import ejbs.StructureBean;
 import entities.Project;
 import entities.Structure;
 import exceptions.MyConstraintViolationException;
@@ -27,7 +26,10 @@ public class ProjectService {
     @EJB
     private ProjectBean projectBean;
 
-    private ProjectDTO toDTO(Project project){
+    @EJB
+    private StructureBean structureBean;
+
+    private ProjectDTO toDTO(Project project) {
         ProjectDTO projectDTO = new ProjectDTO(
                 project.getName(),
                 project.getClient().getId(),
@@ -39,8 +41,35 @@ public class ProjectService {
         return projectDTO;
     }
 
-    private List<ProjectDTO> toDTOs(List<Project> projects){
+    private StructureDTO toDTO(Structure structure) {
+        return new StructureDTO(
+                structure.getName(),
+                structure.getDecision(),
+                structure.getObservation()
+        );
+    }
+
+    private ProjectDTO toDTOStructures(Project project) {
+        ProjectDTO projectDTO = new ProjectDTO(
+                project.getName(),
+                project.getClient().getId(),
+                project.getClient().getName(),
+                project.getDesigner().getId(),
+                project.getDesigner().getName()
+        );
+
+        List<StructureDTO> structureDTOS = toDTOStructures(project.getStructures());
+        projectDTO.setStructures(structureDTOS);
+
+        return projectDTO;
+    }
+
+    private List<ProjectDTO> toDTOs(List<Project> projects) {
         return projects.stream().map(this::toDTO).collect(Collectors.toList());
+    }
+
+    private List<StructureDTO> toDTOStructures(List<Structure> structures) {
+        return structures.stream().map(this::toDTO).collect(Collectors.toList());
     }
 
     @GET
@@ -56,7 +85,7 @@ public class ProjectService {
         Project project = projectBean.findProject(name);
 
         if (project != null)
-            return Response.status(Response.Status.OK).entity(toDTO(project)).build();
+            return Response.status(Response.Status.OK).entity(toDTOStructures(project)).build();
 
         return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("ERROR").build();
     }
@@ -94,6 +123,20 @@ public class ProjectService {
             throws MyEntityNotFoundException {
 
         projectBean.delete(name);
+
+        return Response.status(Response.Status.ACCEPTED).build();
+    }
+
+    @DELETE
+    @Path("{projectName}/structures/{structureName}")
+    public Response delete(@PathParam("projectName") String projectName, @PathParam("structureName") String structureName)
+            throws MyEntityNotFoundException, MyIllegalArgumentException {
+
+
+        projectBean.removeStructure(projectName, structureName);
+        structureBean.delete(structureName);
+
+        // TODO: remover da BD uma estrutura que não esteja associada a um projeto?
 
         return Response.status(Response.Status.ACCEPTED).build();
     }
