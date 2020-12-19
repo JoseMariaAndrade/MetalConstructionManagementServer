@@ -3,9 +3,11 @@ package ejbs;
 import entities.Client;
 import entities.Designer;
 import entities.Project;
+import entities.Structure;
 import exceptions.MyConstraintViolationException;
 import exceptions.MyEntityExistsException;
 import exceptions.MyEntityNotFoundException;
+import exceptions.MyIllegalArgumentException;
 
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
@@ -116,5 +118,39 @@ public class ProjectBean {
         } catch (ConstraintViolationException constraintViolationException) {
             throw new MyConstraintViolationException(constraintViolationException);
         }
+    }
+
+    public void removeStructure(String projectName, String structureName)
+            throws MyEntityNotFoundException, MyIllegalArgumentException {
+
+        Project project = findProject(projectName);
+
+        if (project == null) {
+            throw new MyEntityNotFoundException("Projeto com o nome " + projectName + " não existe");
+        }
+
+        Structure structure = entityManager.find(Structure.class, structureName);
+
+        if (structure == null) {
+            throw new MyEntityNotFoundException("Estrutura com o nome " + structureName + " não existe");
+        }
+
+        if (project.getStructures().contains(structure)) {
+            project.getStructures().remove(structure);
+        } else {
+            throw new MyIllegalArgumentException("");
+        }
+
+//        List<String> structureNames = new ArrayList<>();
+
+//        for (Structure struct: project.getStructures()) {
+//            structureNames.add(struct.getName());
+//        }
+//
+//        if (!structureNames.contains(structure.getName())) {
+//            throw new MyIllegalArgumentException("Projeto com o nome "+projectName+" não contém a estrutura com o nome "+structureName+" - impossível remover");
+//        }
+//
+//        project.getStructures().remove(structure); // TODO: quando se remove uma estrutura de um projeto ela continua na lista de estruturas da aplicação? Solução: dar a opção de remover manualmente estruturas na página das estruturas
     }
 }

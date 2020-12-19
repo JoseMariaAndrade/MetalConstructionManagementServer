@@ -19,7 +19,7 @@ public class VarianteBean {
     public void create(int codigo, String nomeProduto, String name, double weff_p, double weff_n, double ar, double sigmaC) throws MyEntityNotFoundException, MyEntityExistsException {
 
         Product produto = entityManager.find(Product.class, nomeProduto);
-
+      
         if (produto == null) {
             throw new MyEntityNotFoundException("Não existe um produto com o nome "+nomeProduto);
         }
@@ -42,7 +42,6 @@ public class VarianteBean {
 
         produto.getVariantes().add(novaVariante);
         entityManager.persist(novaVariante);
-
     }
 
     public List<Variante> getAll() {
@@ -52,6 +51,7 @@ public class VarianteBean {
     public Variante findVariante(int codigo) {
         return entityManager.find(Variante.class, codigo);
     }
+  
     public Variante getVariante(int codigo) {
         return entityManager.find(Variante.class, codigo);
     }

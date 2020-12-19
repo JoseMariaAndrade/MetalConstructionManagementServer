@@ -40,6 +40,28 @@ public class StructureBean {
         }
     }
 
+    public void create(String name, String projectName, int nb, double LVao, int q)
+            throws MyEntityExistsException, MyEntityNotFoundException, MyConstraintViolationException {
+
+        Structure structure = findStructure(name);
+
+        if (structure != null)
+            throw new MyEntityExistsException("");
+
+        Project project = entityManager.find(Project.class, projectName);
+
+        if (project == null)
+            throw new MyEntityNotFoundException("");
+
+        try {
+            structure = new Structure(name, project, nb, LVao, q);
+            project.structures.add(structure);
+            entityManager.persist(structure);
+        } catch (ConstraintViolationException constraintViolationException) {
+            throw new MyConstraintViolationException(constraintViolationException);
+        }
+    }
+
     public List<Structure> getAll() {
         return entityManager.createNamedQuery("getAllStructures").getResultList();
     }
@@ -58,5 +80,16 @@ public class StructureBean {
 
         structure.getProducts().add(product1);
         product1.getStructures().add(structure);
+    }
+
+    public void delete(String name)
+            throws MyEntityNotFoundException {
+
+        Structure structure = findStructure(name);
+
+        if (structure == null)
+            throw new MyEntityNotFoundException("Estrutura com o nome " + name + " não encontrada");
+
+        entityManager.remove(structure);
     }
 }

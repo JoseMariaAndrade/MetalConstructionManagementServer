@@ -21,7 +21,6 @@ public class Structure implements Serializable {
     @NotNull
     private Project project;
     @ManyToMany(mappedBy = "structures", cascade = CascadeType.REMOVE)
-    @NotNull
     private List<Product> products;
     private Boolean decision;
     private Boolean feito;
@@ -34,6 +33,8 @@ public class Structure implements Serializable {
     public Structure() {
         this.products = new ArrayList<>();
         this.feito = false;
+        this.decision = null;
+        this.observation = null;
     }
 
     public Structure(String name, @NotNull Project project) {
@@ -51,6 +52,10 @@ public class Structure implements Serializable {
         this.nb = nb;
         this.LVao = LVao;
         this.q = q;
+        this.products = new ArrayList<>();
+        this.decision = null;
+        this.feito = false;
+        this.observation = null;
     }
 
     public int getNb() {
