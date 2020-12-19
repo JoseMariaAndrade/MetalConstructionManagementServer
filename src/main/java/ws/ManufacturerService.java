@@ -2,12 +2,12 @@ package ws;
 
 import dtos.ManufacturerDTO;
 import dtos.ProductDTO;
+import dtos.VariantesDTO;
 import ejbs.ManufacturerBean;
 import ejbs.ProductBean;
 import entities.Manufacturer;
 import entities.Product;
-import entities.Project;
-import entities.Structure;
+import entities.Variante;
 import exceptions.MyConstraintViolationException;
 import exceptions.MyEntityExistsException;
 import exceptions.MyEntityNotFoundException;
@@ -17,7 +17,6 @@ import javax.ejb.EJB;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -73,6 +72,30 @@ public class ManufacturerService {
                 needStock,
                 product.getFamilyProduct().getTypeProduct().getDescription(),
                 product.getFamilyProduct().getName()
+        );
+    }
+
+    private ProductDTO toDTOStockVariantes(Product product) {
+        ProductDTO productDTO = new ProductDTO(
+                product.getName(),
+                product.getNeedStock(),
+                product.getFamilyProduct().getTypeProduct().getDescription(),
+                product.getFamilyProduct().getName()
+        );
+
+        List<VariantesDTO> variantesDTOS = variantesToDTOs(product.getVariantes());
+        productDTO.setVariantes(variantesDTOS);
+
+        return productDTO;
+    }
+
+    private List<VariantesDTO> variantesToDTOs(List<Variante> variantes) {
+        return variantes.stream().map(this::toDTO).collect(Collectors.toList());
+    }
+
+    private VariantesDTO toDTO(Variante variante) {
+        return new VariantesDTO(
+                variante.getNome()
         );
     }
 
@@ -139,41 +162,19 @@ public class ManufacturerService {
     public Response getDetailsProduct(@PathParam("id") Long id, @PathParam("name") String name)
             throws MyEntityNotFoundException {
 
-        Manufacturer manufacturer = manufacturerBean.findManufacturer(id);
+        manufacturerBean.verifyStockProducts(id, name);
 
         Product product = productBean.findProduct(name);
 
-        List<Project> projects = manufacturerBean.getAllProjectsApprovedNotDone();
-        List<String> products = new ArrayList<>();
-        for (Project p : projects) {
-            for (Structure s : p.getStructures()) {
-                for (Product p2 : s.getProducts()) {
-                    if (p2.getName().equals(product.getName()))
-                        products.add(p2.getName());
-                    System.out.println(p2 + " com Projecto aprovado");
-                }
-            }
+        if (product == null) {
+            throw new MyEntityNotFoundException("Product not found");
         }
 
-        for (Product p : manufacturer.getProducts()
-        ) {
-//            for (Product p1: products
-//                 ) {
-            if (p.getName().equals(product.getName()) && products.contains(product.getName())) {
-                return Response.status(Response.Status.OK).entity(toDTOStock(p, true)).build();
-            } else {
-                return Response.status(Response.Status.OK).entity(toDTOStock(p, false)).build();
-            }
-        }
-
-//        }
-
-
-        return Response.status(Response.Status.NOT_FOUND).build();
+        return Response.status(Response.Status.OK).entity(toDTOStockVariantes(product)).build();
     }
 
     @POST
-    @Path("{id}")
+    @Path("{id}/product/create")
     public Response createProduct(@PathParam("id") Long id, ProductDTO productDTO)
             throws MyEntityNotFoundException, MyIllegalArgumentException, MyEntityExistsException, MyConstraintViolationException {
 
@@ -182,6 +183,17 @@ public class ManufacturerService {
         productBean.create(productDTO.getName(), productDTO.getFamily(), manufacturer.getId());
 
         return Response.status(Response.Status.CREATED).build();
+    }
+
+    @PUT
+    @Path("{id}/product/{name}/update")
+    public Response updateProduct(@PathParam("id") Long id, @PathParam("name") String name, ProductDTO productDTO)
+            throws MyEntityNotFoundException, MyIllegalArgumentException, MyEntityExistsException, MyConstraintViolationException {
+
+        productBean.update(name, productDTO.getFamily(), id);
+//        productBean.create(productDTO.getName(), productDTO.getFamily(), manufacturer.getId());
+
+        return Response.status(Response.Status.ACCEPTED).build();
     }
 
     @DELETE

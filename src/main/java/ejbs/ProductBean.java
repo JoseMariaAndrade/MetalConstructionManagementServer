@@ -87,11 +87,6 @@ public class ProductBean {
         if (product == null)
             throw new MyEntityNotFoundException("");
 
-//        TypeProduct typeProduct = entityManager.find(TypeProduct.class, description);
-//
-//        if (typeProduct == null)
-//            throw new MyEntityNotFoundException("");
-
         FamilyProduct familyProduct = entityManager.find(FamilyProduct.class, familyName);
 
         if (familyProduct == null)
@@ -106,7 +101,6 @@ public class ProductBean {
 
         try {
             entityManager.lock(product, LockModeType.OPTIMISTIC);
-            product.setName(name);
             product.setFamilyProduct(familyProduct);
             product.setManufacturer(manufacturer);
             addProductToManufacturer(product, manufacturer);

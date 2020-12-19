@@ -1,14 +1,12 @@
 package ws;
 
-import dtos.ClientDTO;
-import dtos.EmailDTO;
-import dtos.ProjectDTO;
-import dtos.StructureDTO;
+import dtos.*;
 import ejbs.ClientBean;
-import ejbs.DesignerBean;
 import ejbs.EmailBean;
 import ejbs.ProjectBean;
+import ejbs.StructureBean;
 import entities.Client;
+import entities.Product;
 import entities.Project;
 import entities.Structure;
 import exceptions.MyConstraintViolationException;
@@ -21,6 +19,7 @@ import javax.mail.MessagingException;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -33,7 +32,7 @@ public class ClientService {
     ClientBean clientBean;
 
     @EJB
-    DesignerBean designerBean;
+    StructureBean structureBean;
 
     @EJB
     ProjectBean projectBean;
@@ -83,8 +82,7 @@ public class ClientService {
                 project.getClient().getName(),
                 project.getDesigner().getId(),
                 project.getDesigner().getName(),
-                project.getDecision(),
-                project.getObservation()
+                project.getAvailableToClient()
         );
     }
 
@@ -94,9 +92,7 @@ public class ClientService {
                 project.getClient().getId(),
                 project.getClient().getName(),
                 project.getDesigner().getId(),
-                project.getDesigner().getName(),
-                project.getDecision(),
-                project.getObservation()
+                project.getDesigner().getName()
         );
 
         List<StructureDTO> structureDTOS = structuresToDTOS(project.getStructures());
@@ -109,11 +105,31 @@ public class ClientService {
         return structures.stream().map(this::toDTO).collect(Collectors.toList());
     }
 
-    private StructureDTO toDTO(Structure structure) {
-        return new StructureDTO(
-                structure.getName(),
-                structure.getProject().getName()
+    private List<ProductDTO> productsToDTOS(List<Product> products) {
+        return products.stream().map(this::toDTO).collect(Collectors.toList());
+    }
+
+    private ProductDTO toDTO(Product product) {
+        return new ProductDTO(
+                product.getName(),
+                product.getFamilyProduct().getTypeProduct().getDescription(),
+                product.getFamilyProduct().getName(),
+                product.getManufacturer().getName()
         );
+    }
+
+    private StructureDTO toDTO(Structure structure) {
+        StructureDTO structureDTO = new StructureDTO(
+                structure.getName(),
+                structure.getProject().getName(),
+                structure.getDecision(),
+                structure.getObservation()
+        );
+
+        List<ProductDTO> productDTOS = productsToDTOS(structure.getProducts());
+        structureDTO.setProducts(productDTOS);
+
+        return structureDTO;
     }
 
     @GET
@@ -139,11 +155,11 @@ public class ClientService {
     }
 
     @POST
-    @Path("{id}/project/{nameProject}")
-    public Response create(@PathParam("id") Long id, @PathParam("nameProject") String nameProject, ProjectDTO projectDTO)
+    @Path("{id}/project/{nameProject}/structure/{nameStructure}")
+    public Response create(@PathParam("id") Long id, @PathParam("nameProject") String nameProject, @PathParam("nameStructure") String nameStructure, StructureDTO structureDTO)
             throws MyEntityNotFoundException, MyIllegalArgumentException, MyConstraintViolationException {
 
-        clientBean.clientDecision(id, nameProject, projectDTO.getDecision(), projectDTO.getObservation());
+        clientBean.clientDecision(id, nameProject, nameStructure, structureDTO.getDecision(), structureDTO.getObservation());
 
         return Response.status(Response.Status.OK).build();
     }
@@ -187,8 +203,47 @@ public class ClientService {
         return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
     }
 
+    @GET
+    @Path("{id}/project/{name}/structure/{nameStructure}")
+    public Response getClientProjectStructure(@PathParam("id") Long id, @PathParam("name") String name, @PathParam("nameStructure") String nameStructure)
+            throws MyEntityNotFoundException {
+
+        Client client = clientBean.findClient(id);
+
+        if (client == null)
+            throw new MyEntityNotFoundException("");
+
+        Project project = projectBean.findProject(name);
+
+        if (project == null)
+            throw new MyEntityNotFoundException("");
+
+        Structure structure = structureBean.findStructure(nameStructure);
+
+        if (structure == null)
+            throw new MyEntityNotFoundException("");
+
+        List<Project> projects = client.getProjects();
+        List<Structure> structures = new ArrayList<>();
+        for (Project project1 : projects) {
+            if (project1.getName().equals(project.getName())) {
+
+                structures = project1.getStructures();
+            }
+        }
+
+        for (Structure structure1 : structures
+        ) {
+            if (structure1.getName().equals(structure.getName()))
+                return Response.status(Response.Status.OK).entity(toDTO(structure1)).build();
+        }
+
+        return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
+    }
+
     @PUT
     public Response update(ClientDTO clientDTO)
+
             throws MyEntityNotFoundException, MyConstraintViolationException {
 
         clientBean.update(
@@ -227,12 +282,11 @@ public class ClientService {
         if (project == null)
             throw new MyEntityNotFoundException("");
 
-        StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append(project.getName());
-        stringBuilder.append(" - ");
-        stringBuilder.append(email.getSubject());
+        String subject = project.getName() +
+                " - " +
+                email.getSubject();
 
-        emailBean.send(project.getDesigner().getEmail(), stringBuilder.toString(), email.getMessage());
+        emailBean.send(project.getDesigner().getEmail(), subject, email.getMessage());
         return Response.status(Response.Status.OK).entity("Email sent").build();
     }
 }

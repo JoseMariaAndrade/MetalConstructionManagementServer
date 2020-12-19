@@ -70,11 +70,11 @@ public class ProductService {
     public Response update(ProductDTO productDTO)
             throws MyEntityNotFoundException, MyConstraintViolationException {
 
-        productBean.update(
-                productDTO.getName(),
-                productDTO.getFamily(),
-                productDTO.getManufacturer()
-        );
+//        productBean.update(
+//                productDTO.getName(),
+//                productDTO.getFamily(),
+//                productDTO.getManufacturer()
+//        );
 
         return Response.status(Response.Status.CREATED).build();
     }

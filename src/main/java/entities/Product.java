@@ -8,6 +8,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 @Entity
+@Table(name = "PRODUCTS")
 @NamedQueries({
         @NamedQuery(name = "getAllProducts", query = "SELECT p FROM Product p ORDER BY p.name")
 })
@@ -31,10 +32,12 @@ public class Product implements Serializable {
     private List<Variante> variantes;
     @Version
     private int version;
+    private Boolean needStock;
 
     public Product() {
         this.structures = new ArrayList<>();
         this.variantes = new LinkedList<>();
+        this.needStock = false;
     }
 
     public Product(String name, @NotNull FamilyProduct familyProduct, @NotNull Manufacturer manufacturer) {
@@ -43,6 +46,7 @@ public class Product implements Serializable {
         this.manufacturer = manufacturer;
         this.structures = new ArrayList<>();
         this.variantes = new LinkedList<>();
+        this.needStock = false;
     }
 
     public String getName() {
@@ -99,5 +103,13 @@ public class Product implements Serializable {
 
     public void setVersion(int version) {
         this.version = version;
+    }
+
+    public Boolean getNeedStock() {
+        return needStock;
+    }
+
+    public void setNeedStock(Boolean needStock) {
+        this.needStock = needStock;
     }
 }

@@ -27,7 +27,11 @@ public class EmailBean {
 
             message.setSubject(subject);
 
-            message.setText(text);
+            if (text != null) {
+                message.setText(text);
+            } else {
+                message.setText("No Comments");
+            }
 
             Date timeStamp = new Date();
             message.setSentDate(timeStamp);

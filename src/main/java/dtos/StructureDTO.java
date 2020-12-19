@@ -11,14 +11,18 @@ public class StructureDTO {
     private int nb; // número de vãos
     private Double LVao; // comprimento dos vãos
     private int q; // sobrecarga atuante
+    private Boolean decision;
+    private String observation;
 
     public StructureDTO() {
         this.products = new ArrayList<>();
     }
 
-    public StructureDTO(String name, String project) {
+    public StructureDTO(String name, String project, Boolean decision, String observation) {
         this.name = name;
         this.project = project;
+        this.decision = decision;
+        this.observation = observation;
         this.products = new ArrayList<>();
     }
 
@@ -85,5 +89,21 @@ public class StructureDTO {
 
     public void setProducts(List<ProductDTO> products) {
         this.products = products;
+    }
+
+    public Boolean getDecision() {
+        return decision;
+    }
+
+    public void setDecision(Boolean decision) {
+        this.decision = decision;
+    }
+
+    public String getObservation() {
+        return observation;
+    }
+
+    public void setObservation(String observation) {
+        this.observation = observation;
     }
 }
